@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "target": "ESNext",
+        "allowJs": true,
+        "jsx": "react",
+        "rootDir": "src",
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+    },
+    "exclude": [
+        "node_modules",
+        "webpack",
+        "postcss.config.js"
+    ],
+    "include": [
+        "src"
+    ]
+}
