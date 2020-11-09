@@ -1,52 +1,82 @@
 export function bindEventsMethods(eventNameList: string[]) {
     eventNameList.forEach(eventName => {
-        document.body.addEventListener(eventName, getEventListener(eventName));
-        document.body.addEventListener(eventName, getEventListenerCapture(eventName), true);
+        document.body.addEventListener(eventName, (e) => {
+            scheduler(e, false);
+        });
+        document.body.addEventListener(eventName, e => {
+            scheduler(e, true);
+        }, true);
     });
 }
 
-export function getEventListener(eventName: string): EventListener {
-    return (e: Event) => {
-        let path = getEventPath(e) as HTMLElement[];
-        path.pop();
-        path.pop();
-        while (path.length > 0) {
-            let element = path.shift() as HTMLElement;
-            let instance = findInstance(path);
-            if (element.hasAttribute) {
-                setTimeout(()=>{
-                    execMethod(element, `${eventName}`, instance, e);
-                })
-                
-            }
-
-        }
+export function scheduler(e: Event, capture: boolean) {
+    if (!capture) {
+        let queue = getBubbleQueue(e);
+        queue.forEach(listener => listener());
+    } else {
+        let queue = getCaptureQueue(e);
+        queue.forEach(listener => listener());
     }
 }
 
-export function getEventListenerCapture(eventName: string): EventListener {
-    return (e: Event) => {
-        let opath = getEventPath(e) as HTMLElement[];
-        opath.pop();
-        opath.pop();
-        let path = [...opath].reverse();
-        while (true) {
-            let instance = findInstance(path);
-            let rs = findTargets(path, instance);
-            if (instance) {
-                // console.log(rs.targets);
-                rs.targets.forEach(element => {
-                    setTimeout(()=>{
-                        execMethod(element, `${eventName},true`, instance, e);
-                    })
-                });
+export function getBubbleQueue(e: Event) {
+    let path = getEventPath(e) as HTMLElement[];
+    path.pop();
+    path.pop();
+    let queue = [];
+    let eventName = e.type;
+    while (path.length > 0) {
+        let element = path.shift() as HTMLElement;
+        let instance = findInstance(path);
+        if (element.hasAttribute) {
+            if (element.hasAttribute(`(${eventName})`)) {
+                let attr = element.getAttribute(`(${eventName})`);
+                let method = getMethod(attr);
+                let args = getArgs(attr, e, instance);
+                if (instance[method]) {
+                    queue.push(() => {
+                        instance[method](...args)
+                    });
+                }
 
             }
-            path = path.slice(rs.nexteIndex + 1, path.length);
-            if (rs.nexteIndex === -1) return;
         }
-
     }
+    return queue;
+}
+
+export function getCaptureQueue(e: Event) {
+    let opath = getEventPath(e) as HTMLElement[];
+    opath.pop();
+    opath.pop();
+    let queue = [];
+    let path = [...opath].reverse();
+    let eventName = e.type;
+    while (true) {
+        let instance = findInstance(path);
+        let rs = findTargets(path, instance);
+        if (instance) {
+            rs.targets.forEach(element => {
+                if (element.hasAttribute) {
+                    if (element.hasAttribute(`(${eventName},true)`)) {
+                        let attr = element.getAttribute(`(${eventName},true)`);
+                        let method = getMethod(attr);
+                        let args = getArgs(attr, e, instance);
+                        if (instance[method]) {
+                            queue.push(() => {
+                                instance[method](...args)
+                            });
+                        }
+
+                    }
+                }
+            });
+
+        }
+        path = path.slice(rs.nexteIndex + 1, path.length);
+        if (rs.nexteIndex === -1) break;
+    }
+    return queue;
 }
 
 export function getEventPath(event: Event): EventTarget[] {
@@ -116,7 +146,7 @@ export function execMethod(element: HTMLElement, eventName: string, instance: HT
             let attr = element.getAttribute(`(${eventName})`);
             let method = getMethod(attr);
             let args = getArgs(attr, e, instance);
-            if (instance[method]) { 
+            if (instance[method]) {
                 instance[method](...args);
             }
 
