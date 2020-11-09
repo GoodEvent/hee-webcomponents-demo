@@ -14,7 +14,10 @@ export function getEventListener(eventName: string): EventListener {
             let element = path.shift() as HTMLElement;
             let instance = findInstance(path);
             if (element.hasAttribute) {
-                execMethod(element, `${eventName}`, instance, e);
+                setTimeout(()=>{
+                    execMethod(element, `${eventName}`, instance, e);
+                })
+                
             }
 
         }
@@ -33,7 +36,9 @@ export function getEventListenerCapture(eventName: string): EventListener {
             if (instance) {
                 // console.log(rs.targets);
                 rs.targets.forEach(element => {
-                    execMethod(element, `${eventName},true`, instance, e);
+                    setTimeout(()=>{
+                        execMethod(element, `${eventName},true`, instance, e);
+                    })
                 });
 
             }
