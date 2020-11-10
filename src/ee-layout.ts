@@ -25,7 +25,7 @@ const tp = (instance) => `
         flex-grow: 1;
     }
 </style>
-<div class="layout" (click,true)="fff()">
+<div class="layout" (click,true)="fff($event)">
 <ee-sidebar></ee-sidebar>
 <div  class="content">
 <ee-header></ee-header>
@@ -37,8 +37,9 @@ const tp = (instance) => `
 `;
 
 class Layout extends HTMLElement {
-    fff(){
-        console.log('layout')
+    fff(e:Event){
+        console.log('layout');
+        // e.stopPropagation();
     }
     constructor() {
         // 必须首先调用 super 方法

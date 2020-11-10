@@ -1,12 +1,12 @@
 const tp = (instance) => `
 <div (click)="mfather()">
-<div (click)="mfoo()">foo</div>
+<div (click)="mfoo($event)">foo</div>
 </div>
 
 `;
 
 class Main extends HTMLElement {
-    
+
     constructor() {
         // 必须首先调用 super 方法
         super();
@@ -27,11 +27,13 @@ class Main extends HTMLElement {
         // bindEventsMethods(this);
     }
 
-    mfoo(){
+    mfoo(event: Event) {
+        console.log(event)
+        event.stopPropagation();
         console.log('mfoo');
     }
 
-    mfather(){
+    mfather() {
         console.log('mfather');
     }
 
@@ -48,11 +50,11 @@ class Main extends HTMLElement {
     attributeChangedCallback() {
         var shadow = this.shadowRoot;
         shadow.innerHTML = tp(this);
-        if(this.querySelector('div')){
+        if (this.querySelector('div')) {
             this.querySelector('div').textContent = `${this.name}${this.age}`;
         }
 
     }
 }
 
-customElements.define('ee-main',Main);
+customElements.define('ee-main', Main);
