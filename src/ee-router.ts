@@ -1,5 +1,3 @@
-import { bindEventsMethods, getArgs, getMethod } from "./event-system";
-
 const tp = (instance) => `
 
 `;

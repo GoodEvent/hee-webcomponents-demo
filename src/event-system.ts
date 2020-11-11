@@ -1,32 +1,47 @@
-let eventStopPropagation = false;
+export interface Task {
+    instance: HTMLElement
+    method: string
+    execMethodExpression: string
+}
 
 export function bindEventsMethods(eventNameList: string[]) {
     eventNameList.forEach(eventName => {
+        let syntheticEvent = new SyntheticEvent();
         document.body.addEventListener(eventName, (e) => {
-            scheduler(e, false);
+            syntheticEvent.nativeEvent = e;
+            scheduler(e, false, syntheticEvent);
         });
         document.body.addEventListener(eventName, e => {
-            scheduler(e, true);
+            syntheticEvent.nativeEvent = e;
+            scheduler(e, true, syntheticEvent);
         }, true);
     });
 }
 
-export function scheduler(e: Event, capture: boolean) {
+export function scheduler(e: Event, capture: boolean, syntheticEvent: SyntheticEvent) {
     if (!capture) {
         let queue = getBubbleQueue(e);
-        while (!eventStopPropagation && queue.length > 0) {
-            let listener = queue.shift();
+        while (!syntheticEvent.isStopPropagation && queue.length > 0) {
+            let { method, execMethodExpression, instance } = queue.shift();
+            let listener = () => {
+                let args = getArgs(execMethodExpression, syntheticEvent, instance);
+                instance[method](...args);
+            };
             let fakeElement = document.createElement('EeNode');
             let tirggerEvent = buildTirggerEvent(e);
             fakeElement.addEventListener(e.type, listener, capture);
             fakeElement.dispatchEvent(tirggerEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
         }
-        eventStopPropagation = false; //在事件冒泡阶段结束后恢复eventStopPropagation全局变量
+        syntheticEvent.isStopPropagation = false; //在事件冒泡阶段结束后恢复eventStopPropagation全局变量
     } else {
         let queue = getCaptureQueue(e);
-        while (!eventStopPropagation && queue.length > 0) {
-            let listener = queue.shift();
+        while (!syntheticEvent.isStopPropagation && queue.length > 0) {
+            let { method, execMethodExpression, instance } = queue.shift();
+            let listener = () => {
+                let args = getArgs(execMethodExpression, syntheticEvent, instance);
+                instance[method](...args);
+            };
             let fakeElement = document.createElement('EeNode');
             let tirggerEvent = buildTirggerEvent(e);
             fakeElement.addEventListener(e.type, listener, capture);
@@ -38,12 +53,14 @@ export function scheduler(e: Event, capture: boolean) {
 }
 
 export class SyntheticEvent {
-    constructor(public nativeEvent: Event) {
+    public nativeEvent: Event;
+    public isStopPropagation = false;
+    constructor() {
 
     }
     stopPropagation() {
         this.nativeEvent.stopPropagation();
-        eventStopPropagation = true;
+        this.isStopPropagation = true;
     }
     preventDefault() {
         this.nativeEvent.preventDefault();
@@ -65,7 +82,7 @@ export function buildTirggerEvent(e: Event) {
     }
 }
 
-export function getBubbleQueue(e: Event) {
+export function getBubbleQueue(e: Event): Task[] {
     let path = getEventPath(e) as HTMLElement[];
     path.pop();
     path.pop();
@@ -79,12 +96,17 @@ export function getBubbleQueue(e: Event) {
                 let attr = element.getAttribute(`(${eventName})`);
                 let method = getMethod(attr);
                 if (instance[method]) {
-                    let syntheticEvent = new SyntheticEvent(e);
-                    let listener = () => {
-                        let args = getArgs(attr, syntheticEvent, instance);
-                        instance[method](...args);
-                    };
-                    queue.push(listener);
+                    // let syntheticEvent = new SyntheticEvent(e);
+                    let task: Task = {
+                        instance,
+                        method,
+                        execMethodExpression: attr
+                    }
+                    // let listener = () => {
+                    //     let args = getArgs(attr, syntheticEvent, instance);
+                    //     instance[method](...args);
+                    // };
+                    queue.push(task);
                 }
 
             }
@@ -93,7 +115,7 @@ export function getBubbleQueue(e: Event) {
     return queue;
 }
 
-export function getCaptureQueue(e: Event) {
+export function getCaptureQueue(e: Event): Task[] {
     let opath = getEventPath(e) as HTMLElement[];
     opath.pop();
     opath.pop();
@@ -110,12 +132,17 @@ export function getCaptureQueue(e: Event) {
                         let attr = element.getAttribute(`(${eventName},true)`);
                         let method = getMethod(attr);
                         if (instance[method]) {
-                            let syntheticEvent = new SyntheticEvent(e);
-                            let listener = () => {
-                                let args = getArgs(attr, syntheticEvent, instance);
-                                instance[method](...args);
-                            };
-                            queue.push(listener);
+                            // let syntheticEvent = new SyntheticEvent(e);
+                            // let listener = () => {
+                            //     let args = getArgs(attr, syntheticEvent, instance);
+                            //     instance[method](...args);
+                            // };
+                            let task: Task = {
+                                instance,
+                                method,
+                                execMethodExpression: attr
+                            }
+                            queue.push(task);
                         }
 
                     }
