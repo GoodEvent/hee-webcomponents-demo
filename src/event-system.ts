@@ -17,7 +17,7 @@ export function scheduler(e: Event, capture: boolean) {
         while (!eventStopPropagation && queue.length > 0) {
             let listener = queue.shift();
             let fakeElement = document.createElement('EeNode');
-            let syntheticEvent = buildSyntheticEvent(e.type);
+            let syntheticEvent = buildSyntheticEvent(e);
             fakeElement.addEventListener(e.type, listener, capture);
             fakeElement.dispatchEvent(syntheticEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
@@ -28,7 +28,7 @@ export function scheduler(e: Event, capture: boolean) {
         while (!eventStopPropagation && queue.length > 0) {
             let listener = queue.shift();
             let fakeElement = document.createElement('EeNode');
-            let syntheticEvent = buildSyntheticEvent(e.type);
+            let syntheticEvent = buildSyntheticEvent(e);
             fakeElement.addEventListener(e.type, listener, capture);
             fakeElement.dispatchEvent(syntheticEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
@@ -37,20 +37,20 @@ export function scheduler(e: Event, capture: boolean) {
 
 }
 
-export function buildSyntheticEvent(eventName: string) {
+export function buildSyntheticEvent(e: Event) {
     if (CustomEvent) {
-        let event = new CustomEvent(eventName, { bubbles: true, cancelable: true });
-        event.stopPropagation = () => { eventStopPropagation = true };
+        let event = new CustomEvent(e.type, { bubbles: true, cancelable: true });
+        event.stopPropagation = () => { e.stopPropagation(); eventStopPropagation = true }
         return event;
     } else if (document.createEvent) {
         let event = document.createEvent('Event');
-        event.initEvent(eventName, true, true);
-        event.stopPropagation = () => { eventStopPropagation = true };
+        event.initEvent(e.type, true, true);
+        event.stopPropagation = () => { e.stopPropagation(); eventStopPropagation = true }
         return event;
     } else {
         return {
-            type: eventName,
-            stopPropagation: () => { eventStopPropagation = true }
+            type: e.type,
+            stopPropagation: () => { e.stopPropagation(); }
         } as Event;
     }
 }
@@ -69,7 +69,7 @@ export function getBubbleQueue(e: Event) {
                 let attr = element.getAttribute(`(${eventName})`);
                 let method = getMethod(attr);
                 if (instance[method]) {
-                    let listener = (e: Event) => {
+                    let listener = () => {
                         let args = getArgs(attr, e, instance);
                         instance[method](...args);
                     };

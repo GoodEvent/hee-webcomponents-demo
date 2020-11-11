@@ -1,6 +1,7 @@
 const tp = (instance) => `
 <div (click)="mfather()">
 <div (click)="mfoo($event)">foo</div>
+<input (click)="checkbox($event)" type="checkbox" />   
 </div>
 
 `;
@@ -24,6 +25,9 @@ class Main extends HTMLElement {
     }
 
     connectedCallback() {
+        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
+        //     e.preventDefault();
+        // });
         // bindEventsMethods(this);
     }
 
@@ -35,6 +39,10 @@ class Main extends HTMLElement {
 
     mfather() {
         console.log('mfather');
+    }
+
+    checkbox(e:Event){
+        e.preventDefault();
     }
 
     static get observedAttributes() { return ['name', 'age']; }
