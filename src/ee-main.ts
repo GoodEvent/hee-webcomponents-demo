@@ -42,6 +42,7 @@ class Main extends HTMLElement {
     }
 
     checkbox(e:Event){
+        console.log('checkbox');
         e.preventDefault();
     }
 

@@ -17,9 +17,9 @@ export function scheduler(e: Event, capture: boolean) {
         while (!eventStopPropagation && queue.length > 0) {
             let listener = queue.shift();
             let fakeElement = document.createElement('EeNode');
-            let syntheticEvent = buildSyntheticEvent(e);
+            let tirggerEvent = buildTirggerEvent(e);
             fakeElement.addEventListener(e.type, listener, capture);
-            fakeElement.dispatchEvent(syntheticEvent);
+            fakeElement.dispatchEvent(tirggerEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
         }
         eventStopPropagation = false; //在事件冒泡阶段结束后恢复eventStopPropagation全局变量
@@ -28,29 +28,39 @@ export function scheduler(e: Event, capture: boolean) {
         while (!eventStopPropagation && queue.length > 0) {
             let listener = queue.shift();
             let fakeElement = document.createElement('EeNode');
-            let syntheticEvent = buildSyntheticEvent(e);
+            let tirggerEvent = buildTirggerEvent(e);
             fakeElement.addEventListener(e.type, listener, capture);
-            fakeElement.dispatchEvent(syntheticEvent);
+            fakeElement.dispatchEvent(tirggerEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
         }
     }
 
 }
 
-export function buildSyntheticEvent(e: Event) {
+export class SyntheticEvent {
+    constructor(public nativeEvent: Event) {
+
+    }
+    stopPropagation() {
+        this.nativeEvent.stopPropagation();
+        eventStopPropagation = true;
+    }
+    preventDefault() {
+        this.nativeEvent.preventDefault();
+    }
+}
+
+export function buildTirggerEvent(e: Event) {
     if (CustomEvent) {
-        let event = new CustomEvent(e.type, { bubbles: true, cancelable: true });
-        event.stopPropagation = () => { e.stopPropagation(); eventStopPropagation = true }
+        let event = new CustomEvent(e.type);
         return event;
     } else if (document.createEvent) {
         let event = document.createEvent('Event');
-        event.initEvent(e.type, true, true);
-        event.stopPropagation = () => { e.stopPropagation(); eventStopPropagation = true }
+        event.initEvent(e.type);
         return event;
     } else {
         return {
             type: e.type,
-            stopPropagation: () => { e.stopPropagation(); }
         } as Event;
     }
 }
@@ -69,8 +79,9 @@ export function getBubbleQueue(e: Event) {
                 let attr = element.getAttribute(`(${eventName})`);
                 let method = getMethod(attr);
                 if (instance[method]) {
+                    let syntheticEvent = new SyntheticEvent(e);
                     let listener = () => {
-                        let args = getArgs(attr, e, instance);
+                        let args = getArgs(attr, syntheticEvent, instance);
                         instance[method](...args);
                     };
                     queue.push(listener);
@@ -99,8 +110,9 @@ export function getCaptureQueue(e: Event) {
                         let attr = element.getAttribute(`(${eventName},true)`);
                         let method = getMethod(attr);
                         if (instance[method]) {
-                            let listener = (e: Event) => {
-                                let args = getArgs(attr, e, instance);
+                            let syntheticEvent = new SyntheticEvent(e);
+                            let listener = () => {
+                                let args = getArgs(attr, syntheticEvent, instance);
                                 instance[method](...args);
                             };
                             queue.push(listener);
