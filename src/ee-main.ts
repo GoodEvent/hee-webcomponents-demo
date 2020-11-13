@@ -1,19 +1,18 @@
-const tp = (instance) => `
-<div (click)="mfather()">
-<div (click)="mfoo($event)">foo</div>
-<input (click)="checkbox($event)" type="checkbox" />   
-</div>
+import { store } from "./redux";
 
-`;
 
 class Main extends HTMLElement {
-
+    unsubscribe;
+    html: string;
     constructor() {
         // 必须首先调用 super 方法
         super();
+        let state = store.state;
+        let keys = Object.keys(state);
+        keys.forEach(key => {
+            this.setAttribute(key, state[key]);
+        });
         const shadow = this.attachShadow({ mode: 'open' });
-
-        shadow.innerHTML = tp(this);
     }
 
     get name() {
@@ -24,13 +23,49 @@ class Main extends HTMLElement {
         return this.getAttribute('age');
     }
 
+    add() {
+        store.dispatch({ type: 'add' });
+    }
+    add1() {
+        store.dispatch({ type: 'add1' });
+    }
+
+    render(state) {
+      return `
+    <div (click)="mfather()">
+<div (click)="mfoo($event)">foo</div>
+<input (click)="checkbox($event)" type="checkbox" />   
+<button (click)="add()">${state.count}</button>
+<button (click)="add1()">${state.count}</button>
+</div>
+
+`;
+
+    }
+
+    afterViewChecked() {
+        console.log('afterViewChecked')
+    }
+
     connectedCallback() {
         // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
         //     e.preventDefault();
         // });
         // bindEventsMethods(this);
+        this.unsubscribe = store.subscribe(state => {
+            console.log(this);
+            let html = this.render(state);
+            if (this.html !== html) {
+                console.log('render');
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
+        });
     }
-
+    disconnectedCallback() {
+        this.unsubscribe();
+    }
     mfoo(event: Event) {
         console.log(event)
         event.stopPropagation();
@@ -41,12 +76,12 @@ class Main extends HTMLElement {
         console.log('mfather');
     }
 
-    checkbox(e:Event){
+    checkbox(e: Event) {
         console.log('checkbox');
         e.preventDefault();
     }
 
-    static get observedAttributes() { return ['name', 'age']; }
+    static get observedAttributes() { return Object.keys(store.state); }
 
 
     changeName($event, name, age) {
@@ -57,12 +92,7 @@ class Main extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        var shadow = this.shadowRoot;
-        shadow.innerHTML = tp(this);
-        if (this.querySelector('div')) {
-            this.querySelector('div').textContent = `${this.name}${this.age}`;
-        }
-
+       
     }
 }
 

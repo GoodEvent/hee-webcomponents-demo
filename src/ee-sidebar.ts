@@ -1,4 +1,25 @@
-const tp = (instance) => `<style>
+import { store } from "./redux";
+
+
+
+class Sidebar extends HTMLElement {
+    
+    constructor() {
+        // 必须首先调用 super 方法
+        super();
+        const shadow = this.attachShadow({ mode: 'open' });
+    }
+
+    get name() {
+        return this.getAttribute('name');
+    }
+
+    get age() {
+        return this.getAttribute('age');
+    }
+
+    render(state) {
+       return `<style>
     ul {
         list-style-type: none;
         margin: 0;
@@ -18,35 +39,41 @@ const tp = (instance) => `<style>
 <div>
     <div class="logo">logo</div>
     <ul>
-        <li (click)="u()"><a> 用户管理 </a>
+        <li (click)="u()"><a> ${state.count}管理 </a>
         </li>
         <li (click)="s()"><a>系统管理</a></li>
     </ul>
 </div>`;
 
-class Sidebar extends HTMLElement {
-    
-    constructor() {
-        // 必须首先调用 super 方法
-        super();
-        const shadow = this.attachShadow({ mode: 'open' });
-
-        shadow.innerHTML = tp(this);
     }
 
-    get name() {
-        return this.getAttribute('name');
+    afterViewChecked() {
+        console.log('afterViewChecked')
     }
-
-    get age() {
-        return this.getAttribute('age');
-    }
-
+    unsubscribe
+    html
     connectedCallback() {
+        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
+        //     e.preventDefault();
+        // });
         // bindEventsMethods(this);
+        this.unsubscribe = store.subscribe(state => {
+            console.log(this);
+            let html = this.render(state);
+            if (this.html !== html) {
+                console.log('render');
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
+        });
+    }
+    disconnectedCallback() {
+        this.unsubscribe();
     }
 
     u(){
+        store.dispatch({type:'add'});
         console.log('u');
     }
 
@@ -62,15 +89,6 @@ class Sidebar extends HTMLElement {
     }
     changeAge($event, name, age) {
         this.setAttribute('age', age + 1);
-    }
-
-    attributeChangedCallback() {
-        var shadow = this.shadowRoot;
-        shadow.innerHTML = tp(this);
-        if(this.querySelector('div')){
-            this.querySelector('div').textContent = `${this.name}${this.age}`;
-        }
-
     }
 }
 

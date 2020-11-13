@@ -1,28 +1,4 @@
-const tp = (instance) => `
-    <style>
-        ul{
-            list-style-type:none;
-        }
-        li{
-            display:inline-block;
-            color: #ffffff;
-        }
-    </style>
-    <div>
-    <ul>
-        <li>
-        <a>
-        我的消息
-        </a>
-        </li>
-        <li>
-        <a>
-        头像
-        </a>
-        </li>
-    </ul>
-    </div>
-`;
+import { store } from "./redux";
 
 class Header extends HTMLElement {
 
@@ -31,7 +7,6 @@ class Header extends HTMLElement {
         super();
         const shadow = this.attachShadow({ mode: 'open' });
 
-        shadow.innerHTML = tp(this);
     }
 
     get name() {
@@ -42,8 +17,57 @@ class Header extends HTMLElement {
         return this.getAttribute('age');
     }
 
+    render(state) {
+        return `
+        <style>
+            ul{
+                list-style-type:none;
+            }
+            li{
+                display:inline-block;
+                color: #ffffff;
+            }
+        </style>
+        <div>
+        <ul>
+            <li>
+            <a>
+            我的消息
+            </a>
+            </li>
+            <li>
+            <a>
+            ${state.name}
+            </a>
+            </li>
+        </ul>
+        </div>
+    `;
+    }
+
+    afterViewChecked() {
+        console.log('afterViewChecked')
+    }
+    unsubscribe
+    html
     connectedCallback() {
+        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
+        //     e.preventDefault();
+        // });
         // bindEventsMethods(this);
+        this.unsubscribe = store.subscribe(state => {
+            console.log(this);
+            let html = this.render(state);
+            if (this.html !== html) {
+                console.log('render');
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
+        });
+    }
+    disconnectedCallback() {
+        this.unsubscribe();
     }
 
     static get observedAttributes() { return ['name', 'age']; }
@@ -57,11 +81,7 @@ class Header extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        var shadow = this.shadowRoot;
-        shadow.innerHTML = tp(this);
-        if (this.querySelector('div')) {
-            this.querySelector('div').textContent = `${this.name}${this.age}`;
-        }
+       
 
     }
 }

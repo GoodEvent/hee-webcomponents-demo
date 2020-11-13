@@ -1,4 +1,4 @@
-import { bindEventsMethods, getArgs, getMethod } from "./event-system";
+import { store } from "./redux";
 
 const tp = (instance) => `
 <style>
@@ -27,7 +27,7 @@ const tp = (instance) => `
 </style>
 <div class="layout" (click,true)="fff($event)">
 <ee-sidebar></ee-sidebar>
-<div  class="content">
+<div class="content">
 <ee-header></ee-header>
 <ee-main></ee-main>
 </div>
@@ -58,11 +58,13 @@ class Layout extends HTMLElement {
     }
 
     connectedCallback() {
-        
+        store.subscribe(() => {
+
+        });
     }
 
 
-    static get observedAttributes() { return ['name', 'age']; }
+    get observedAttributes() { return ['name', 'age']; }
 
 
     changeName($event, name, age) {

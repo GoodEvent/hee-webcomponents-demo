@@ -33,7 +33,7 @@ export function scheduler(e: Event, capture: boolean, syntheticEvent: SyntheticE
             fakeElement.dispatchEvent(tirggerEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
         }
-        syntheticEvent.isStopPropagation = false; //在事件冒泡阶段结束后恢复eventStopPropagation全局变量
+        syntheticEvent.isStopPropagation = false; //在事件冒泡阶段结束后恢复isStopPropagation全局变量
     } else {
         let queue = getCaptureQueue(e);
         while (!syntheticEvent.isStopPropagation && queue.length > 0) {
@@ -96,16 +96,11 @@ export function getBubbleQueue(e: Event): Task[] {
                 let attr = element.getAttribute(`(${eventName})`);
                 let method = getMethod(attr);
                 if (instance[method]) {
-                    // let syntheticEvent = new SyntheticEvent(e);
                     let task: Task = {
                         instance,
                         method,
                         execMethodExpression: attr
                     }
-                    // let listener = () => {
-                    //     let args = getArgs(attr, syntheticEvent, instance);
-                    //     instance[method](...args);
-                    // };
                     queue.push(task);
                 }
 
@@ -132,11 +127,6 @@ export function getCaptureQueue(e: Event): Task[] {
                         let attr = element.getAttribute(`(${eventName},true)`);
                         let method = getMethod(attr);
                         if (instance[method]) {
-                            // let syntheticEvent = new SyntheticEvent(e);
-                            // let listener = () => {
-                            //     let args = getArgs(attr, syntheticEvent, instance);
-                            //     instance[method](...args);
-                            // };
                             let task: Task = {
                                 instance,
                                 method,
