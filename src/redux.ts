@@ -24,6 +24,6 @@ export class Store<T = any> {
     }
 }
 
-const store = new Store({ count: 0, name: '罗霄', age: 100 }, rootReducer);
+const store = new Store({ count: 0, name: '梁朝伟', age: 100 }, rootReducer);
 
 export { store };
