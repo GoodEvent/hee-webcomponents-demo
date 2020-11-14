@@ -111,38 +111,31 @@ export function getBubbleQueue(e: Event): Task[] {
 }
 
 export function getCaptureQueue(e: Event): Task[] {
-    let opath = getEventPath(e) as HTMLElement[];
-    opath.pop();
-    opath.pop();
+    let path = getEventPath(e) as HTMLElement[];
+    path.pop();
+    path.pop();
     let queue = [];
-    let path = [...opath].reverse();
     let eventName = e.type;
-    while (true) {
+    while (path.length > 0) {
+        let element = path.shift() as HTMLElement;
         let instance = findInstance(path);
-        let rs = findTargets(path, instance);
-        if (instance) {
-            rs.targets.forEach(element => {
-                if (element.hasAttribute) {
-                    if (element.hasAttribute(`(${eventName},true)`)) {
-                        let attr = element.getAttribute(`(${eventName},true)`);
-                        let method = getMethod(attr);
-                        if (instance[method]) {
-                            let task: Task = {
-                                instance,
-                                method,
-                                execMethodExpression: attr
-                            }
-                            queue.push(task);
-                        }
-
+        if (element.hasAttribute) {
+            if (element.hasAttribute(`(${eventName},true)`)) {
+                let attr = element.getAttribute(`(${eventName},true)`);
+                let method = getMethod(attr);
+                if (instance[method]) {
+                    let task: Task = {
+                        instance,
+                        method,
+                        execMethodExpression: attr
                     }
+                    queue.push(task);
                 }
-            });
 
+            }
         }
-        path = path.slice(rs.nexteIndex + 1, path.length);
-        if (rs.nexteIndex === -1) break;
     }
+    queue.reverse();
     return queue;
 }
 

@@ -34,7 +34,7 @@ class Main extends HTMLElement {
       return `
     <div (click)="mfather()">
 <div (click)="mfoo($event)">foo</div>
-<input (click)="checkbox($event)" type="checkbox" />   
+<input (click,true)="checkbox($event)" type="checkbox" />   
 <button (click)="add()">${state.count}</button>
 <button (click)="add1()">${state.count}</button>
 </div>
