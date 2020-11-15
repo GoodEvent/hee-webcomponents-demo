@@ -21,8 +21,8 @@ import { Header } from './ee-header';
 bindEventsMethods(['click']);
 store.dispatch({ type: 'init' });
 
-const components = [Main,Sidebar,Layout,Header];
-components.forEach(component => {
+const declarations = [Main,Sidebar,Layout,Header];
+declarations.forEach(component => {
     customElements.define(component.mtagName,component);
 });
 // document.querySelector('#root-component').appendChild(new Layout());
