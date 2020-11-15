@@ -18,6 +18,7 @@ export class Store<T = any> {
     }
     subscribe(listener: Function) {
         let index = this.listeners.push(listener);
+        listener(this.state);
         return () => {
             this.listeners.splice(index - 1, 1);
         };

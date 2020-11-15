@@ -49,10 +49,6 @@ export class Main extends HTMLElement {
     }
 
     connectedCallback() {
-        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
-        //     e.preventDefault();
-        // });
-        // bindEventsMethods(this);
         this.unsubscribe = store.subscribe(state => {
             console.log(this);
             let html = this.render(state);

@@ -19,10 +19,10 @@ import { Sidebar } from './ee-sidebar';
 import { Layout } from './ee-layout';
 import { Header } from './ee-header';
 bindEventsMethods(['click']);
+store.dispatch({ type: 'init' });
 
 const components = [Main,Sidebar,Layout,Header];
 components.forEach(component => {
     customElements.define(component.mtagName,component);
 });
 // document.querySelector('#root-component').appendChild(new Layout());
-store.dispatch({ type: 'init' });
