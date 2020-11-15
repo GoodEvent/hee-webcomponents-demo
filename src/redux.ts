@@ -1,11 +1,19 @@
-export const rootReducer = (state, action) => {
+export const users = (state = [], action) => {
     switch (action.type) {
-        case 'add': return { ...state, count: state.count + 1 };
-        case 'add1': return { ...state, name: state.name + 1 };
-        case 'decrease': return { ...state, count: state.count - 1 };
+        case 'set': return action.payload;
         default: return state;
     }
 }
+
+export const loading = (state = false, action) => {
+    switch (action.type) {
+        case 'fetching': return true;
+        case 'fetchend': return false;
+        default: return state;
+    }
+}
+
+export const rootReducer = combineReducers({ users, loading });
 
 export class Store<T = any> {
     listeners: Function[] = [];
@@ -25,6 +33,17 @@ export class Store<T = any> {
     }
 }
 
-const store = new Store({ count: 0, name: '梁朝伟', age: 100 }, rootReducer);
+export function combineReducers(obj) {
+    const keys = Object.keys(obj);
+    return (state, action) => {
+        return keys.reduce((pre, current) => {
+            let value = obj[current](state[current], action);
+            pre[current] = value;
+            return pre;
+        }, {});
+    };
+}
+
+const store = new Store({}, rootReducer);
 
 export { store };

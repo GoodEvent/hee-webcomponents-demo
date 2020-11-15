@@ -18,10 +18,13 @@ import { Main } from './ee-main';
 import { Sidebar } from './ee-sidebar';
 import { Layout } from './ee-layout';
 import { Header } from './ee-header';
+import { Card } from './ee-card';
 bindEventsMethods(['click']);
 store.dispatch({ type: 'init' });
-
-const declarations = [Main,Sidebar,Layout,Header];
+store.subscribe(value => {
+    console.log(value);
+})
+const declarations = [Main,Sidebar,Layout,Header,Card];
 declarations.forEach(component => {
     customElements.define(component.mtagName,component);
 });

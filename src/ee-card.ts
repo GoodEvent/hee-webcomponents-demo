@@ -1,10 +1,9 @@
 import { store } from "./redux";
 
-
-export class Main extends HTMLElement {
-    static mtagName = "ee-main"
-    unsubscribe;
+export class Card extends HTMLElement{
+    static mtagName = 'ee-card';
     html: string;
+    unsubscribe
     constructor() {
         // 必须首先调用 super 方法
         super();
@@ -26,17 +25,16 @@ export class Main extends HTMLElement {
         store.dispatch({ type: 'add1' });
     }
 
-    render(state: { users: [],loading:boolean }) {
-        return `
-        <button (click)="search()">search</button>
-        ${
-            state.loading ?
-            `<div> loading </div>`
-            :
-            state.users.reduce((pre, current) => {
-            return `${pre}<div>${current}</div>`;
-        }, '')}
-    `;
+    render(state) {
+      return `
+    <div (click)="mfather()">
+<div (click)="mfoo($event)">foo</div>
+<input (click,true)="checkbox($event)" type="checkbox" />   
+<button (click)="add()">${state.count}</button>
+<button (click)="add1()">${state.count}</button>
+</div>
+
+`;
 
     }
 
@@ -55,17 +53,7 @@ export class Main extends HTMLElement {
             }
             this.afterViewChecked();
         });
-        this.search();
     }
-
-    search() {
-        store.dispatch({ type: 'fetching' });
-        setTimeout(() => {
-            store.dispatch({ type: 'set', payload: ['周润发', '梁朝伟'] });
-            store.dispatch({ type: 'fetchend' });
-        },1000);
-    }
-
     disconnectedCallback() {
         this.unsubscribe();
     }
@@ -84,17 +72,4 @@ export class Main extends HTMLElement {
         e.preventDefault();
     }
 
-    // static get observedAttributes() { return Object.keys(store.state); }
-
-
-    changeName($event, name, age) {
-        this.setAttribute('name', name + 1);
-    }
-    changeAge($event, name, age) {
-        this.setAttribute('age', age + 1);
-    }
-
-    attributeChangedCallback() {
-
-    }
 }
