@@ -1,7 +1,8 @@
 import { store } from "./redux";
 
 
-class Main extends HTMLElement {
+export class Main extends HTMLElement {
+    static mtagName = "ee-main"
     unsubscribe;
     html: string;
     constructor() {
@@ -95,5 +96,3 @@ class Main extends HTMLElement {
        
     }
 }
-
-customElements.define('ee-main', Main);

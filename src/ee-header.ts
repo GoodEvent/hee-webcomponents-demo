@@ -1,7 +1,7 @@
 import { store } from "./redux";
 
-class Header extends HTMLElement {
-
+export class Header extends HTMLElement {
+    static mtagName = "ee-header"
     constructor() {
         // 必须首先调用 super 方法
         super();
@@ -85,5 +85,3 @@ class Header extends HTMLElement {
 
     }
 }
-
-customElements.define('ee-header', Header);

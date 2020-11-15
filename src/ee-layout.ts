@@ -36,7 +36,8 @@ const tp = (instance) => `
 
 `;
 
-class Layout extends HTMLElement {
+export class Layout extends HTMLElement {
+    static mtagName = 'ee-layout';
     fff(e:Event){
         console.log('layout');
         // e.stopPropagation();
@@ -83,5 +84,3 @@ class Layout extends HTMLElement {
 
     }
 }
-
-customElements.define('ee-layout',Layout);

@@ -12,11 +12,17 @@ import './styles/style.scss';
 //     document.getElementById('root')
 // )
 
-import './ee-layout'
-import './ee-header'
-import './ee-main'
-import './ee-sidebar'
 import { bindEventsMethods } from './event-system';
 import { store } from './redux';
+import { Main } from './ee-main';
+import { Sidebar } from './ee-sidebar';
+import { Layout } from './ee-layout';
+import { Header } from './ee-header';
 bindEventsMethods(['click']);
+
+const components = [Main,Sidebar,Layout,Header];
+components.forEach(component => {
+    customElements.define(component.mtagName,component);
+});
+// document.querySelector('#root-component').appendChild(new Layout());
 store.dispatch({ type: 'init' });

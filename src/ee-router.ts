@@ -43,5 +43,3 @@ class Router extends HTMLElement {
 
     }
 }
-
-customElements.define('ee-router',Router);

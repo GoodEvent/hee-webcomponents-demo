@@ -2,8 +2,8 @@ import { store } from "./redux";
 
 
 
-class Sidebar extends HTMLElement {
-    
+export class Sidebar extends HTMLElement {
+    static mtagName = "ee-sidebar"
     constructor() {
         // 必须首先调用 super 方法
         super();
@@ -91,5 +91,3 @@ class Sidebar extends HTMLElement {
         this.setAttribute('age', age + 1);
     }
 }
-
-customElements.define('ee-sidebar',Sidebar);
