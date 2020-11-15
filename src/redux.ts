@@ -1,5 +1,3 @@
-import { promises } from "fs";
-
 export const users = (state = [], action) => {
     switch (action.type) {
         case 'set': return action.payload;
