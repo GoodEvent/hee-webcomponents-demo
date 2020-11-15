@@ -8,11 +8,6 @@ export class Main extends HTMLElement {
     constructor() {
         // 必须首先调用 super 方法
         super();
-        let state = store.state;
-        let keys = Object.keys(state);
-        keys.forEach(key => {
-            this.setAttribute(key, state[key]);
-        });
         const shadow = this.attachShadow({ mode: 'open' });
     }
 
