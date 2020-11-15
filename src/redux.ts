@@ -1,3 +1,5 @@
+import { promises } from "fs";
+
 export const users = (state = [], action) => {
     switch (action.type) {
         case 'set': return action.payload;
@@ -17,10 +19,18 @@ export const rootReducer = combineReducers({ users, loading });
 
 export class Store<T = any> {
     listeners: Function[] = [];
-    constructor(public state: T, public reducer: Function) {
+    constructor(public state: T, public reducer: Function, public middlewares: Function[]) {
 
     }
+
     dispatch(action) {
+        this.middlewares.forEach(middleware => {
+            middleware(this.realDispatch, action);
+        });
+        this.realDispatch(action);
+    }
+
+    realDispatch = (action) => {
         this.state = this.reducer(this.state, action);
         this.listeners.forEach(listener => listener(this.state));
     }
@@ -44,6 +54,35 @@ export function combineReducers(obj) {
     };
 }
 
-const store = new Store({}, rootReducer);
+
+export function getUserThunk() {
+    return (dispatch) => {
+        return fetch('/zh.json')
+            .then(res => res.json())
+            .then(rs => {
+                dispatch({ type: 'set', payload: rs });
+            }, error => {
+                console.log(error);
+            })
+            .finally(() => {
+                dispatch({ type: 'fetchend' });
+            });
+    };
+}
+
+export function thunk(dispatch, action) {
+    if (action instanceof Function) {
+        let p = action(dispatch);
+        if (p instanceof Promise) {
+            p.then(() => {
+
+            });
+        }
+    } else {
+        console.log(action);
+    }
+}
+
+const store = new Store({}, rootReducer, [thunk]);
 
 export { store };

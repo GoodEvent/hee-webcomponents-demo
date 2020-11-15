@@ -1,4 +1,4 @@
-import { store } from "./redux";
+import { getUserThunk, store } from "./redux";
 
 
 export class Main extends HTMLElement {
@@ -9,6 +9,16 @@ export class Main extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
+        this.unsubscribe = store.subscribe(state => {
+            console.log(this);
+            let html = this.render(state);
+            if (this.html !== html) {
+                console.log('render');
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
+        });
     }
 
     get name() {
@@ -26,16 +36,15 @@ export class Main extends HTMLElement {
         store.dispatch({ type: 'add1' });
     }
 
-    render(state: { users: [],loading:boolean }) {
+    render(state: { users: [], loading: boolean }) {
         return `
         <button (click)="search()">search</button>
-        ${
-            state.loading ?
-            `<div> loading </div>`
-            :
-            state.users.reduce((pre, current) => {
-            return `${pre}<div>${current}</div>`;
-        }, '')}
+        ${state.loading ?
+                `<div> loading </div>`
+                :
+                state.users.reduce((pre, current) => {
+                    return `${pre}<div>${current}</div>`;
+                }, '')}
     `;
 
     }
@@ -45,30 +54,25 @@ export class Main extends HTMLElement {
     }
 
     connectedCallback() {
-        this.unsubscribe = store.subscribe(state => {
-            console.log(this);
-            let html = this.render(state);
-            if (this.html !== html) {
-                console.log('render');
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-        });
+
         this.search();
     }
-
-    search() {
-        store.dispatch({ type: 'fetching' });
-        setTimeout(() => {
-            store.dispatch({ type: 'set', payload: ['周润发', '梁朝伟'] });
-            store.dispatch({ type: 'fetchend' });
-        },1000);
-    }
-
     disconnectedCallback() {
         this.unsubscribe();
     }
+    search() {
+        store.dispatch({ type: 'fetching' });
+        setTimeout(() => {
+            store.dispatch(getUserThunk());
+        }, 1000)
+
+        // setTimeout(() => {
+        //     store.dispatch({ type: 'set', payload: ['周润发', '梁朝伟'] });
+        //     store.dispatch({ type: 'fetchend' });
+        // },1000);
+    }
+
+
     mfoo(event: Event) {
         console.log(event)
         event.stopPropagation();
