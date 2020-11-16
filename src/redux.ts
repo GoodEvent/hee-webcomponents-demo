@@ -75,6 +75,7 @@ export function createStore(reducer, initState, enhaner) {
     let dispatch = (action) => {
         state = currentReducer(state, action);
         listeners.forEach(listener => listener());
+        return action;
     }
 
     let subscribe = (listener: Function) => {
