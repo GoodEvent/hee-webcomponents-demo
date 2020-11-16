@@ -46,7 +46,6 @@ export class Header extends HTMLElement {
     }
 
     afterViewChecked() {
-        console.log('afterViewChecked')
     }
     unsubscribe
     html
@@ -55,11 +54,9 @@ export class Header extends HTMLElement {
         //     e.preventDefault();
         // });
         // bindEventsMethods(this);
-        this.unsubscribe = store.subscribe(state => {
-            console.log(this);
-            let html = this.render(state);
+        this.unsubscribe = store.subscribe(() => {
+            let html = this.render(store.getState());
             if (this.html !== html) {
-                console.log('render');
                 this.html = html;
                 this.shadowRoot.innerHTML = html;
             }

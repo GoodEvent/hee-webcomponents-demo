@@ -39,15 +39,12 @@ export class Card extends HTMLElement{
     }
 
     afterViewChecked() {
-        console.log('afterViewChecked')
     }
 
     connectedCallback() {
         this.unsubscribe = store.subscribe(state => {
-            console.log(this);
             let html = this.render(state);
             if (this.html !== html) {
-                console.log('render');
                 this.html = html;
                 this.shadowRoot.innerHTML = html;
             }
@@ -58,17 +55,13 @@ export class Card extends HTMLElement{
         this.unsubscribe();
     }
     mfoo(event: Event) {
-        console.log(event)
         event.stopPropagation();
-        console.log('mfoo');
     }
 
     mfather() {
-        console.log('mfather');
     }
 
     checkbox(e: Event) {
-        console.log('checkbox');
         e.preventDefault();
     }
 

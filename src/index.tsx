@@ -20,12 +20,8 @@ import { Layout } from './ee-layout';
 import { Header } from './ee-header';
 import { Card } from './ee-card';
 bindEventsMethods(['click']);
-store.subscribe(() => {
-    console.log(store.getState());
-})
-store.dispatch({ type: 'init' });
-// const declarations = [Main,Sidebar,Layout,Header,Card];
-// declarations.forEach(component => {
-//     customElements.define(component.mtagName,component);
-// });
+const declarations = [Main,Sidebar,Layout,Header,Card];
+declarations.forEach(component => {
+    customElements.define(component.mtagName,component);
+});
 // document.querySelector('#root-component').appendChild(new Layout());

@@ -39,7 +39,6 @@ const tp = (instance) => `
 export class Layout extends HTMLElement {
     static mtagName = 'ee-layout';
     fff(e:Event){
-        console.log('layout');
         // e.stopPropagation();
     }
     constructor() {

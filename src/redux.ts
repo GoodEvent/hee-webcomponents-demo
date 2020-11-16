@@ -1,3 +1,5 @@
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 export const users = (state = [], action) => {
     switch (action.type) {
         case 'set': return action.payload;
@@ -53,33 +55,8 @@ export function combineReducers(obj) {
 }
 
 
-export function getUserThunk() {
-    return (dispatch) => {
-        return fetch('/zh.json')
-            .then(res => res.json())
-            .then(rs => {
-                dispatch({ type: 'set', payload: rs });
-            }, error => {
-                console.log(error);
-            })
-            .finally(() => {
-                dispatch({ type: 'fetchend' });
-            });
-    };
-}
 
-export function thunk(dispatch, action) {
-    if (action instanceof Function) {
-        let p = action(dispatch);
-        if (p instanceof Promise) {
-            p.then(() => {
 
-            });
-        }
-    } else {
-        console.log(action);
-    }
-}
 const randomString = () =>
     Math.random().toString(36).substring(7).split('').join('.')
 
@@ -88,11 +65,13 @@ const ActionTypes = {
     REPLACE: `@@redux/REPLACE${/* #__PURE__ */ randomString()}`,
     PROBE_UNKNOWN_ACTION: () => `@@redux/PROBE_UNKNOWN_ACTION${randomString()}`
 }
-export function createStore(reducer, initState) {
+export function createStore(reducer, initState, enhaner) {
     let listeners: Function[] = [];
     let state = initState;
     let currentReducer = reducer;
-
+    if(enhaner instanceof Function){
+        return enhaner(createStore)(reducer,initState);
+    }
     let dispatch = (action) => {
         state = currentReducer(state, action);
         listeners.forEach(listener => listener());
@@ -118,13 +97,38 @@ export function createStore(reducer, initState) {
     return store;
 }
 
-const logMiddleware = store => next => action => {
+export const logMiddleware = store => next => action => {
     console.log('dispatching', action);
     const rs = next(action);
     console.log('next state:' + store.getState());
     return rs;
 };
 
+export function getUserThunk() {
+    return (dispatch) => {
+        return fetch('/zh.json')
+            .then(res => res.json())
+            .then(rs => {
+                console.log('foo')
+                dispatch({ type: 'set', payload: rs });
+            }, error => {
+            })
+            .finally(() => {
+                dispatch({ type: 'fetchend' });
+            });
+    };
+}
+
+export const thunkMiddleware = store => next => action => {
+    if(action instanceof Function){
+        return action(next);
+    }else{
+        const rs = next(action);
+        return rs;
+    }
+    
+    
+}
 const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer,iniState) => {
     const store = createStore(rootReducer,iniState);
     middlewares = middlewares.slice();
@@ -136,8 +140,13 @@ const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer
     return Object.assign({}, store, {dispatch});
 }
 
-let store = applyMiddleware([logMiddleware])(createStore)(rootReducer, {});
-console.log(store);
+let store = createStore(rootReducer,{},
+    composeWithDevTools(
+    applyMiddleware([thunkMiddleware,logMiddleware])
+)
+);
+
+// let store = applyMiddleware([logMiddleware,thunkMiddleware])(createStore)(rootReducer, {});
 // const store = new Store({}, rootReducer, [thunk]);
 // const eh = (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__();
 

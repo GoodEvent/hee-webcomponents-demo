@@ -9,11 +9,9 @@ export class Main extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        this.unsubscribe = store.subscribe(state => {
-            console.log(this);
-            let html = this.render(state);
+        this.unsubscribe = store.subscribe(() => {
+            let html = this.render(store.getState());
             if (this.html !== html) {
-                console.log('render');
                 this.html = html;
                 this.shadowRoot.innerHTML = html;
             }
@@ -50,11 +48,10 @@ export class Main extends HTMLElement {
     }
 
     afterViewChecked() {
-        console.log('afterViewChecked')
     }
 
     connectedCallback() {
-
+        console.log('ffff')
         this.search();
     }
     disconnectedCallback() {
@@ -74,17 +71,13 @@ export class Main extends HTMLElement {
 
 
     mfoo(event: Event) {
-        console.log(event)
         event.stopPropagation();
-        console.log('mfoo');
     }
 
     mfather() {
-        console.log('mfather');
     }
 
     checkbox(e: Event) {
-        console.log('checkbox');
         e.preventDefault();
     }
 

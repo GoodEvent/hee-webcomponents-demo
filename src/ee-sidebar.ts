@@ -48,7 +48,6 @@ export class Sidebar extends HTMLElement {
     }
 
     afterViewChecked() {
-        console.log('afterViewChecked')
     }
     unsubscribe
     html
@@ -57,11 +56,9 @@ export class Sidebar extends HTMLElement {
         //     e.preventDefault();
         // });
         // bindEventsMethods(this);
-        this.unsubscribe = store.subscribe(state => {
-            console.log(this);
-            let html = this.render(state);
+        this.unsubscribe = store.subscribe(() => {
+            let html = this.render(store.getState());
             if (this.html !== html) {
-                console.log('render');
                 this.html = html;
                 this.shadowRoot.innerHTML = html;
             }
@@ -74,11 +71,9 @@ export class Sidebar extends HTMLElement {
 
     u(){
         store.dispatch({type:'add'});
-        console.log('u');
     }
 
     s(){
-        console.log('s');
     }
 
     static get observedAttributes() { return ['name', 'age']; }
