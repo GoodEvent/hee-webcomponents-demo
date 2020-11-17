@@ -130,6 +130,24 @@ export const thunkMiddleware = store => next => action => {
     
     
 }
+
+export const routerMiddleware = store => next => action => {
+    if(action.type === 'push'){
+        history.pushState(null,null,action.payload);
+        const rs = next(action);
+        return rs;
+    }else if(action.type === 'replace'){
+        history.replaceState(null,null,action.payload);
+        const rs = next(action);
+        return rs;
+    }else{
+        const rs = next(action);
+        return rs;
+    }
+    
+    
+}
+
 const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer,iniState) => {
     const store = createStore(rootReducer,iniState);
     middlewares = middlewares.slice();
@@ -143,7 +161,7 @@ const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer
 
 let store = createStore(rootReducer,{},
     composeWithDevTools(
-    applyMiddleware([thunkMiddleware,logMiddleware])
+    applyMiddleware([thunkMiddleware,logMiddleware,routerMiddleware])
 )
 );
 

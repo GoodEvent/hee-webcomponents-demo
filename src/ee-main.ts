@@ -36,6 +36,8 @@ export class Main extends HTMLElement {
 
     render(state: { users: [], loading: boolean }) {
         return `
+        <button (click)="push()">push</button>
+        <button (click)="replace()">replace</button>
         <button (click)="search()">search</button>
         ${state.loading ?
                 `<div> loading </div>`
@@ -44,6 +46,15 @@ export class Main extends HTMLElement {
                     return `${pre}<div>${current}</div>`;
                 }, '')}
     `;
+
+    }
+
+    push(){
+        store.dispatch({type:'push',payload:'http://localhost:8080/push'});
+    }
+
+    replace(){
+        store.dispatch({type:'replace',payload:'http://localhost:8080/replace'});
 
     }
 
