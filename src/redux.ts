@@ -110,7 +110,6 @@ export function getUserThunk() {
         return fetch('/zh.json')
             .then(res => res.json())
             .then(rs => {
-                console.log('foo')
                 dispatch({ type: 'set', payload: rs });
             }, error => {
             })
@@ -161,7 +160,7 @@ const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer
 
 let store = createStore(rootReducer,{},
     composeWithDevTools(
-    applyMiddleware([thunkMiddleware,logMiddleware,routerMiddleware])
+    applyMiddleware([logMiddleware,thunkMiddleware,routerMiddleware])
 )
 );
 
