@@ -36,8 +36,6 @@ export class Main extends HTMLElement {
 
     render(state: { users: [], loading: boolean }) {
         return `
-        <button (click)="login()">push</button>
-        <button (click)="layout()">replace</button>
         <button (click)="search()">search</button>
         <button (click)="login()">login</button>
         ${state.loading ?
@@ -66,6 +64,7 @@ export class Main extends HTMLElement {
         this.search();
     }
     disconnectedCallback() {
+        console.log('remove')
         this.unsubscribe();
     }
     search() {

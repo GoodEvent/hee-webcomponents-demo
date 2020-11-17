@@ -39,7 +39,7 @@ export class Login extends HTMLElement {
     }
 
     layout(){
-        store.dispatch({type:'replace',payload:'/layout'});
+        store.dispatch({type:'push',payload:'/layout'});
     }
 
 

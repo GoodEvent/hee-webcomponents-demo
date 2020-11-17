@@ -28,7 +28,7 @@ export let router = (state, action) => {
                 return state;
             }
         }
-        case 'init': {
+        case 'load': {
             let router = routerTable.find(item => item.url === action.payload);
             if (router) {
                 return router;
@@ -60,9 +60,6 @@ export class Router extends HTMLElement {
                 this.html = newHtml;
                 shadow.innerHTML = this.html;
             }
-            // this.setAttribute('component',router.component);
-
-            // shadow.innerHTML = 
         });
     }
 
@@ -129,5 +126,6 @@ export const routerMiddleware = store => next => action => {
 
 
 window.addEventListener('popstate', (e) => {
-    console.log('addEvet');
+    let pathname = location.pathname;
+    store.dispatch({type:'load',payload:pathname});
 });
