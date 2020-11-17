@@ -19,9 +19,11 @@ import { Sidebar } from './ee-sidebar';
 import { Layout } from './ee-layout';
 import { Header } from './ee-header';
 import { Card } from './ee-card';
+import { Login } from './ee-login';
+import { Router } from './ee-router';
 bindEventsMethods(['click']);
-const declarations = [Main,Sidebar,Layout,Header,Card];
+const declarations = [Main,Sidebar,Layout,Header,Card,Login,Router];
 declarations.forEach(component => {
     customElements.define(component.mtagName,component);
 });
-// document.querySelector('#root-component').appendChild(new Layout());
+document.querySelector('#root-component').appendChild(new Router());

@@ -1,5 +1,5 @@
 import { composeWithDevTools } from 'redux-devtools-extension';
-
+import { router, routerMiddleware } from "./ee-router";
 export const users = (state = [], action) => {
     switch (action.type) {
         case 'set': return action.payload;
@@ -15,7 +15,7 @@ export const loading = (state = false, action) => {
     }
 }
 
-export const rootReducer = combineReducers({ users, loading });
+export const rootReducer = combineReducers({ users, loading, router });
 
 // export class Store<T = any> {
 //     listeners: Function[] = [];
@@ -69,8 +69,8 @@ export function createStore(reducer, initState, enhaner) {
     let listeners: Function[] = [];
     let state = initState;
     let currentReducer = reducer;
-    if(enhaner instanceof Function){
-        return enhaner(createStore)(reducer,initState);
+    if (enhaner instanceof Function) {
+        return enhaner(createStore)(reducer, initState);
     }
     let dispatch = (action) => {
         state = currentReducer(state, action);
@@ -120,49 +120,36 @@ export function getUserThunk() {
 }
 
 export const thunkMiddleware = store => next => action => {
-    if(action instanceof Function){
+    if (action instanceof Function) {
         return action(next);
-    }else{
+    } else {
         const rs = next(action);
         return rs;
     }
-    
-    
+
+
 }
 
-export const routerMiddleware = store => next => action => {
-    if(action.type === 'push'){
-        history.pushState(null,null,action.payload);
-        const rs = next(action);
-        return rs;
-    }else if(action.type === 'replace'){
-        history.replaceState(null,null,action.payload);
-        const rs = next(action);
-        return rs;
-    }else{
-        const rs = next(action);
-        return rs;
-    }
-    
-    
-}
 
-const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer,iniState) => {
-    const store = createStore(rootReducer,iniState);
+
+const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer, iniState) => {
+    const store = createStore(rootReducer, iniState);
     middlewares = middlewares.slice();
     middlewares.reverse();
     let dispatch = store.dispatch;
     middlewares.forEach(middleware => {
         dispatch = middleware(store)(dispatch);
     });
-    return Object.assign({}, store, {dispatch});
+    return Object.assign({}, store, { dispatch });
 }
 
-let store = createStore(rootReducer,{},
+
+let store = createStore(rootReducer, {},
     composeWithDevTools(
-    applyMiddleware([logMiddleware,thunkMiddleware,routerMiddleware])
-)
+        applyMiddleware([logMiddleware, thunkMiddleware, routerMiddleware])
+    )
 );
+
 
 // let store = applyMiddleware([logMiddleware,thunkMiddleware])(createStore)(rootReducer, {});
 // const store = new Store({}, rootReducer, [thunk]);

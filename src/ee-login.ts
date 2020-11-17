@@ -1,21 +1,17 @@
 import { getUserThunk, store } from "./redux";
 
 
-export class Main extends HTMLElement {
-    static mtagName = "ee-main"
+export class Login extends HTMLElement {
+    static mtagName = "ee-login"
     unsubscribe;
     html: string;
     constructor() {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        this.unsubscribe = store.subscribe(() => {
-            let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
+        store.subscribe(()=>{
+            let state = store.getState();
+            shadow.innerHTML = this.render(state);
         });
     }
 
@@ -36,43 +32,32 @@ export class Main extends HTMLElement {
 
     render(state: { users: [], loading: boolean }) {
         return `
-        <button (click)="login()">push</button>
-        <button (click)="layout()">replace</button>
-        <button (click)="search()">search</button>
-        <button (click)="login()">login</button>
-        ${state.loading ?
-                `<div> loading </div>`
-                :
-                state.users.reduce((pre, current) => {
-                    return `${pre}<div>${current}</div>`;
-                }, '')}
+        login
+        <button (click)="layout()">layout</button>
     `;
 
     }
 
-    login(){
-        store.dispatch({type:'replace',payload:'/login'});
-    }
-
     layout(){
         store.dispatch({type:'replace',payload:'/layout'});
-
     }
+
 
     afterViewChecked() {
     }
 
     connectedCallback() {
-        this.search();
+        
     }
     disconnectedCallback() {
-        this.unsubscribe();
     }
     search() {
-        store.dispatch({ type: 'fetching' });
-        setTimeout(() => {
-            store.dispatch(getUserThunk());
-        }, 1000)
+       
+
+        // setTimeout(() => {
+        //     store.dispatch({ type: 'set', payload: ['周润发', '梁朝伟'] });
+        //     store.dispatch({ type: 'fetchend' });
+        // },1000);
     }
 
 

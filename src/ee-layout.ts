@@ -58,9 +58,7 @@ export class Layout extends HTMLElement {
     }
 
     connectedCallback() {
-        store.subscribe(() => {
-
-        });
+       
     }
 
 
@@ -75,11 +73,11 @@ export class Layout extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        var shadow = this.shadowRoot;
-        shadow.innerHTML = tp(this);
-        if(this.querySelector('div')){
-            this.querySelector('div').textContent = `${this.name}${this.age}`;
-        }
+        // var shadow = this.shadowRoot;
+        // shadow.innerHTML = tp(this);
+        // if(this.querySelector('div')){
+        //     this.querySelector('div').textContent = `${this.name}${this.age}`;
+        // }
 
     }
 }
