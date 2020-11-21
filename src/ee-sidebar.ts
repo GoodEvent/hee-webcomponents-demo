@@ -60,10 +60,6 @@ export class Sidebar extends HTMLElement {
     }
 
     connectedCallback() {
-        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
-        //     e.preventDefault();
-        // });
-        // bindEventsMethods(this);
         this.unsubscribe = store.subscribe(() => {
             let html = this.render(store.getState());
             if (this.html !== html) {
