@@ -1,12 +1,17 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
+var path = require("path");
 
 module.exports = merge(common, {
     mode: 'development',
     devtool: 'inline-source-map',
+    output: {
+        filename: '[name].bundle.js',
+        publicPath: "/",
+    },
     devServer: {
         contentBase: './src/static',
-        historyApiFallback: true
+        historyApiFallback: true,
     },
     module:{
         rules:[
@@ -38,7 +43,5 @@ module.exports = merge(common, {
             }
         ]
     },
-    output: {
-        filename: '[name].bundle.js',
-    }
+    
 });
