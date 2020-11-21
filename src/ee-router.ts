@@ -33,12 +33,21 @@ export let router = (state, action) => {
         }
 
         case 'replace': {
-            let router = routerTable.find(item => item.url === action.payload);
-            if (router) {
-                return router;
-            } else {
-                return state;
+            let nowRouterTable = routerTable;
+            let pathname: string = action.payload;
+            let routerQueue = [];
+            while (pathname) {
+                let router = nowRouterTable
+                    .find(item => pathname.startsWith(item.url));
+                if (router) {
+                    routerQueue.push(router);
+                    pathname = pathname.replace(router.url, '');
+                    nowRouterTable = router.children;
+                } else {
+                    throw `not match ${pathname}`;
+                }
             }
+            return routerQueue;
         }
         case 'load': {
             let nowRouterTable = routerTable;
@@ -78,16 +87,16 @@ export let routerLoading = (state = false, action) => {
 
 export const routerMiddleware = store => next => action => {
     if (action.type === 'push') {
-        history.pushState(null, null, action.payload);
         const rs = next(action);
+        history.pushState(null, null, action.payload);
         return rs;
     } else if (action.type === 'replace') {
-        history.replaceState(null, null, action.payload);
         const rs = next(action);
+        history.replaceState(null, null, action.payload);
         return rs;
     } else if (action.type === 'load') {
-
         const rs = next(action);
+        history.replaceState(null, null, action.payload);
         return rs;
     } else {
         const rs = next(action);
@@ -104,7 +113,6 @@ export class Router extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        // this.router = store.getState().router;
         store.dispatch({ type: 'routeloadstart' });
         shadow.innerHTML = this.render();
         
@@ -112,28 +120,6 @@ export class Router extends HTMLElement {
     }
 
     route = [];
-
-    findRoute(element: HTMLElement) {
-        if (element || element.shadowRoot) {
-            if (element.tagName === 'EE-ROUTE') {
-                this.route.push(element);
-            }
-            if (element.shadowRoot) {
-                [...element.shadowRoot.children].forEach((e: HTMLElement) => {
-                    this.findRoute(e);
-                });
-            } else {
-                [...element.children].forEach((e: HTMLElement) => {
-                    this.findRoute(e);
-                });
-            }
-        } else {
-            return;
-        }
-
-
-
-    }
 
     connectedCallback() {
         store.subscribe(() => {
