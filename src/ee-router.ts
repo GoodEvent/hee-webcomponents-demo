@@ -116,8 +116,6 @@ export class Router extends HTMLElement {
         store.dispatch({ type: 'load', payload: location.pathname })
         store.dispatch({ type: 'routeloadstart' });
         shadow.innerHTML = this.render();
-
-
     }
 
     route = [];

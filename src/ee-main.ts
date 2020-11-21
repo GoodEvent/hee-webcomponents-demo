@@ -9,14 +9,6 @@ export class Main extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        this.unsubscribe = store.subscribe(() => {
-            let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-        });
     }
 
     get name() {
@@ -41,12 +33,12 @@ export class Main extends HTMLElement {
 
     }
 
-    login(){
-        store.dispatch({type:'push',payload:'/login'});
+    login() {
+        store.dispatch({ type: 'push', payload: '/login' });
     }
 
-    layout(){
-        store.dispatch({type:'push',payload:'/layout'});
+    layout() {
+        store.dispatch({ type: 'push', payload: '/layout' });
 
     }
 
@@ -54,6 +46,14 @@ export class Main extends HTMLElement {
     }
 
     connectedCallback() {
+        this.unsubscribe = store.subscribe(() => {
+            let html = this.render(store.getState());
+            if (this.html !== html) {
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
+        });
     }
     disconnectedCallback() {
         console.log('remove')

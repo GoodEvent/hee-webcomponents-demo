@@ -9,10 +9,6 @@ export class Login extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        store.subscribe(()=>{
-            let state = store.getState();
-            shadow.innerHTML = this.render(state);
-        });
     }
 
     get name() {
@@ -47,9 +43,13 @@ export class Login extends HTMLElement {
     }
 
     connectedCallback() {
-        
+     this.unsubscribe = store.subscribe(()=>{
+            let state = store.getState();
+            this.shadowRoot.innerHTML = this.render(state);
+        });
     }
     disconnectedCallback() {
+        this.unsubscribe();
     }
     search() {
        
