@@ -38,6 +38,7 @@ export class Search extends HTMLElement {
         return `
         <button (click)="search()">search</button>
         <button (click)="login()">login</button>
+        <button (click)="blank()">blank</button>
         ${state.loading ?
                 `<div> loading </div>`
                 :
@@ -52,8 +53,8 @@ export class Search extends HTMLElement {
         store.dispatch({type:'push',payload:'/login'});
     }
 
-    layout(){
-        store.dispatch({type:'push',payload:'/layout'});
+    blank(){
+        store.dispatch({type:'push',payload:'/layout/blank'});
 
     }
 

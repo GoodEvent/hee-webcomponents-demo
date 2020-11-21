@@ -36,25 +36,13 @@ export class Blank extends HTMLElement {
 
     render(state: { users: [], loading: boolean }) {
         return `
-        <button (click)="search()">search</button>
-        <button (click)="login()">login</button>
-        ${state.loading ?
-                `<div> loading </div>`
-                :
-                state.users.reduce((pre, current) => {
-                    return `${pre}<div>${current}</div>`;
-                }, '')}
+        <button (click)="tosearch()">tosearch</button>
     `;
 
     }
 
-    login(){
-        store.dispatch({type:'push',payload:'/login'});
-    }
-
-    layout(){
-        store.dispatch({type:'push',payload:'/layout'});
-
+    tosearch(){
+        store.dispatch({type:'push',payload:'/layout/search'})
     }
 
     afterViewChecked() {
