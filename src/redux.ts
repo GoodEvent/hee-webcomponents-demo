@@ -1,5 +1,5 @@
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { router, routerMiddleware } from "./ee-router";
+import { router, routerMiddleware, routerLoading } from "./ee-router";
 export const users = (state = [], action) => {
     switch (action.type) {
         case 'set': return action.payload;
@@ -15,7 +15,7 @@ export const loading = (state = false, action) => {
     }
 }
 
-export const rootReducer = combineReducers({ users, loading, router });
+export const rootReducer = combineReducers({ users, loading, router, routerLoading });
 
 // export class Store<T = any> {
 //     listeners: Function[] = [];
@@ -79,10 +79,12 @@ export function createStore(reducer, initState, enhaner) {
     }
 
     let subscribe = (listener: Function) => {
-        let index = listeners.push(listener);
+        listeners.push(listener);
         listener(getState());
         return () => {
-            listeners.splice(index - 1, 1);
+            listeners = listeners.filter(item => {
+                return item != listener;
+            });
         };
     }
 
@@ -146,7 +148,7 @@ const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer
 
 let store = createStore(rootReducer, {},
     composeWithDevTools(
-        applyMiddleware([logMiddleware, thunkMiddleware, routerMiddleware])
+    applyMiddleware([logMiddleware, thunkMiddleware, routerMiddleware])
     )
 );
 
