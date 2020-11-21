@@ -36,24 +36,17 @@ export class Main extends HTMLElement {
 
     render(state: { users: [], loading: boolean }) {
         return `
-        <button (click)="search()">search</button>
-        <button (click)="login()">login</button>
-        ${state.loading ?
-                `<div> loading </div>`
-                :
-                state.users.reduce((pre, current) => {
-                    return `${pre}<div>${current}</div>`;
-                }, '')}
+       <ee-route></ee-route>
     `;
 
     }
 
     login(){
-        store.dispatch({type:'replace',payload:'/login'});
+        store.dispatch({type:'push',payload:'/login'});
     }
 
     layout(){
-        store.dispatch({type:'replace',payload:'/layout'});
+        store.dispatch({type:'push',payload:'/layout'});
 
     }
 
@@ -61,7 +54,6 @@ export class Main extends HTMLElement {
     }
 
     connectedCallback() {
-        this.search();
     }
     disconnectedCallback() {
         console.log('remove')

@@ -1,17 +1,21 @@
-import { getUserThunk, store } from "./redux";
+import { store, getUserThunk } from "../redux";
 
 
-export class Login extends HTMLElement {
-    static mtagName = "ee-login"
+export class Blank extends HTMLElement {
+    static mtagName = "ee-blank"
     unsubscribe;
     html: string;
     constructor() {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        store.subscribe(()=>{
-            let state = store.getState();
-            shadow.innerHTML = this.render(state);
+        this.unsubscribe = store.subscribe(() => {
+            let html = this.render(store.getState());
+            if (this.html !== html) {
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
         });
     }
 
@@ -32,32 +36,42 @@ export class Login extends HTMLElement {
 
     render(state: { users: [], loading: boolean }) {
         return `
-        login
-        <button (click)="layout()">layout</button>
+        <button (click)="search()">search</button>
+        <button (click)="login()">login</button>
+        ${state.loading ?
+                `<div> loading </div>`
+                :
+                state.users.reduce((pre, current) => {
+                    return `${pre}<div>${current}</div>`;
+                }, '')}
     `;
 
     }
 
-    layout(){
-        store.dispatch({type:'push',payload:'/layout/search'});
+    login(){
+        store.dispatch({type:'push',payload:'/login'});
     }
 
+    layout(){
+        store.dispatch({type:'push',payload:'/layout'});
+
+    }
 
     afterViewChecked() {
     }
 
     connectedCallback() {
-        
+        this.search();
     }
     disconnectedCallback() {
+        console.log('remove')
+        this.unsubscribe();
     }
     search() {
-       
-
-        // setTimeout(() => {
-        //     store.dispatch({ type: 'set', payload: ['周润发', '梁朝伟'] });
-        //     store.dispatch({ type: 'fetchend' });
-        // },1000);
+        store.dispatch({ type: 'fetching' });
+        setTimeout(() => {
+            store.dispatch(getUserThunk());
+        }, 1000)
     }
 
 

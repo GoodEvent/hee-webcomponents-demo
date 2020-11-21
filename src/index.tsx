@@ -20,10 +20,13 @@ import { Layout } from './ee-layout';
 import { Header } from './ee-header';
 import { Card } from './ee-card';
 import { Login } from './ee-login';
-import { Router } from './ee-router';
+import { Router, RouterOut } from './ee-router';
+import { Search } from './page/ee-search';
+import { Blank } from './page/ee-blank';
 bindEventsMethods(['click']);
-const declarations = [Main,Sidebar,Layout,Header,Card,Login,Router];
+const declarations = [Main,Sidebar,Layout,Header,Card,Login,RouterOut,Router,Search,Blank];
 declarations.forEach(component => {
     customElements.define(component.mtagName,component);
 });
+store.dispatch({ type: 'load', payload: location.pathname })
 document.querySelector('#root-component').appendChild(new Router());
