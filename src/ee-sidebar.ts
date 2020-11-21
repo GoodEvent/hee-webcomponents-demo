@@ -39,9 +39,9 @@ export class Sidebar extends HTMLElement {
 <div>
     <div class="logo">logo</div>
     <ul>
-        <li (click)="u()"><a> ${state.count}管理 </a>
+        <li (click)="toblank()"><a (click)=""> 白板页 </a>
         </li>
-        <li (click)="s()"><a>系统管理</a></li>
+        <li (click)="tosearch()"><a>search</a></li>
     </ul>
 </div>`;
 
@@ -51,6 +51,14 @@ export class Sidebar extends HTMLElement {
     }
     unsubscribe
     html
+
+    toblank(){
+        store.dispatch({type:'push',payload:'/layout/blank'});
+    }
+    tosearch(){
+        store.dispatch({type:'push',payload:'/layout/search'});
+    }
+
     connectedCallback() {
         // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
         //     e.preventDefault();
