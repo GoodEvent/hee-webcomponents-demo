@@ -28,5 +28,4 @@ const declarations = [Main,Sidebar,Layout,Header,Card,Login,RouterOut,Router,Sea
 declarations.forEach(component => {
     customElements.define(component.mtagName,component);
 });
-store.dispatch({ type: 'load', payload: location.pathname })
 document.querySelector('#root-component').appendChild(new Router());

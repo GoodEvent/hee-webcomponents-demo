@@ -113,9 +113,10 @@ export class Router extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
+        store.dispatch({ type: 'load', payload: location.pathname })
         store.dispatch({ type: 'routeloadstart' });
         shadow.innerHTML = this.render();
-        
+
 
     }
 
