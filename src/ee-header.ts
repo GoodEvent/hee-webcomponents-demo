@@ -31,12 +31,7 @@ export class Header extends HTMLElement {
         <ul>
             <li>
             <a>
-            我的消息
-            </a>
-            </li>
-            <li>
-            <a>
-            ${state.name}
+            notification
             </a>
             </li>
         </ul>
