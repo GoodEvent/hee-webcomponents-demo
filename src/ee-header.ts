@@ -3,7 +3,6 @@ import { store } from "./redux";
 export class Header extends HTMLElement {
     static mtagName = "ee-header"
     constructor() {
-        // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
 

@@ -45,6 +45,7 @@
     "babel-plugin-import": "^1.13.0",
     "core-js": "^2.6.3",
     "hee-animation": "^1.0.0-apla",
+    "hee-event-system": "^1.0.1-alpha",
     "postcss-scss": "^2.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

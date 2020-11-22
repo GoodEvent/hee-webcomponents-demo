@@ -109,7 +109,7 @@ export const logMiddleware = store => next => action => {
 
 export function getUserThunk() {
     return (dispatch) => {
-        return fetch('/zh.json')
+        return fetch('/cars.json')
             .then(res => res.json())
             .then(rs => {
                 dispatch({ type: 'set', payload: rs });

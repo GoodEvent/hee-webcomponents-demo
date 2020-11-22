@@ -12,7 +12,7 @@ import './styles/style.scss';
 //     document.getElementById('root')
 // )
 
-import { bindEventsMethods } from './event-system';
+import { bindEventsMethods } from 'hee-event-system';
 import { store } from './redux';
 import { Main } from './ee-main';
 import { Sidebar } from './ee-sidebar';
