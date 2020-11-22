@@ -150,18 +150,7 @@ export class RouterOut extends HTMLElement {
         // 必须首先调用 super 方法
         super();
         const shadow = this.attachShadow({ mode: 'open' });
-        let state = store.getState();
-        let routerQueue: any[] = state.router;
-        if (routerQueue && routerQueue.length > 0) {
-            let queue = [...routerQueue];
-            let route = queue.shift();
-            let newHtml = this.render(route);
-            store.dispatch({ type: 'router/loadcomponent', payload: queue });
-            this.shadowRoot.innerHTML = newHtml;
-            if (queue.length === 0) {
-                store.dispatch({ type: 'routeloadend' });
-            }
-        }
+        
     }
 
     render(router: { url: string, component: string }) {
@@ -178,7 +167,18 @@ export class RouterOut extends HTMLElement {
 
 
     connectedCallback() {
-
+        let state = store.getState();
+        let routerQueue: any[] = state.router;
+        if (routerQueue && routerQueue.length > 0) {
+            let queue = [...routerQueue];
+            let route = queue.shift();
+            let newHtml = this.render(route);
+            store.dispatch({ type: 'router/loadcomponent', payload: queue });
+            this.shadowRoot.innerHTML = newHtml;
+            if (queue.length === 0) {
+                store.dispatch({ type: 'routeloadend' });
+            }
+        }
     }
 
     static get observedAttributes() { return ['component']; }

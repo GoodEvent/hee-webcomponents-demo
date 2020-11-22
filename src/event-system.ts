@@ -33,7 +33,7 @@ export function scheduler(e: Event, capture: boolean, syntheticEvent: SyntheticE
             fakeElement.dispatchEvent(tirggerEvent);
             fakeElement.removeEventListener(e.type, listener, capture);
         }
-        syntheticEvent.isStopPropagation = false; //在事件冒泡阶段结束后恢复isStopPropagation全局变量
+        syntheticEvent.isStopPropagation = false; 
     } else {
         let queue = getCaptureQueue(e);
         while (!syntheticEvent.isStopPropagation && queue.length > 0) {
@@ -151,8 +151,8 @@ export function getEventPath(event: Event): EventTarget[] {
             path.push(target);
             target = target.parentNode as HTMLElement;
         }
-        this.path.push(document, window);
-        return this.path;
+        path.push(document, window);
+        return path;
     }
 }
 

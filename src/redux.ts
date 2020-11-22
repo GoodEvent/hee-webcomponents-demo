@@ -148,7 +148,7 @@ const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer
 
 let store = createStore(rootReducer, {},
     composeWithDevTools(
-    applyMiddleware([thunkMiddleware,routerMiddleware])
+    applyMiddleware([thunkMiddleware,logMiddleware,routerMiddleware])
     )
 );
 
