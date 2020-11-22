@@ -232,6 +232,14 @@ export function getArgs(name: string, e, instance) {
     return args;
 }
 
+/**
+ * (click)="foo()"
+ * 
+ * getMethod("foo()")
+ * 
+ * will return "foo"
+ * @param name 
+ */
 export function getMethod(name: string) {
     let sp = name.split('(');
     return sp[0];

@@ -39,7 +39,7 @@ export class Sidebar extends HTMLElement {
 <div>
     <div class="logo">logo</div>
     <ul>
-        <li (click)="toblank()"><a (click)=""> 白板页 </a>
+        <li (click)="toblank()"><a> blank </a>
         </li>
         <li (click)="tosearch()"><a>search</a></li>
     </ul>

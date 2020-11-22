@@ -18,7 +18,7 @@ import { Main } from './ee-main';
 import { Sidebar } from './ee-sidebar';
 import { Layout } from './ee-layout';
 import { Header } from './ee-header';
-import { Card } from './ee-card';
+import { Card } from './component/ee-card';
 import { Login } from './ee-login';
 import { Router, RouterOut } from './ee-router';
 import { Search } from './page/ee-search';
