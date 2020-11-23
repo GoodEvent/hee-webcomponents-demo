@@ -25,13 +25,15 @@ module.exports = merge(common, {
                 ]
             },
             {
-                test: { and: [/^ee-*.scss$/, /\.scss$/] },
-                exclude: [/\.global.scss$/, /node_modules/],
+                test:
+                    // /\.scss/,
+                    { and: [/\.scss$/, /ee-/] },
                 use: [
-                    "style-loader", // creates style nodes from JS strings
-                    "css-loader", // translates CSS into CommonJS
-                    "postcss-loader",
+                    // "style-loader", // creates style nodes from JS strings
+                    // "css-loader", // translates CSS into CommonJS
+                    // "postcss-loader",
                     "sass-to-string",
+                    "postcss-loader",
                     {
                         loader: "sass-loader",
                         options: {
@@ -42,16 +44,16 @@ module.exports = merge(common, {
                     },
                 ]
             },
-            {
-                test: /\.global.scss$/,
-                exclude: [/node_modules/],
-                use: [
-                    "style-loader", // creates style nodes from JS strings
-                    "css-loader", // translates CSS into CommonJS
-                    "postcss-loader",
-                    "sass-loader"
-                ]
-            },
+            // {
+            //     test: /\.global.scss$/,
+            //     exclude: [/node_modules/],
+            //     use: [
+            //         "style-loader", // creates style nodes from JS strings
+            //         "css-loader", // translates CSS into CommonJS
+            //         "postcss-loader",
+            //         "sass-loader"
+            //     ]
+            // },
             {
                 test: /\.less$/,
                 use: [

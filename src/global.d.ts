@@ -53,6 +53,10 @@ declare namespace NodeJS {
     export default classes;
   }
   
+  declare module '*.scss' {
+    export default any;
+  }
+
   declare module '*.module.sass' {
     const classes: { [key: string]: string };
     export default classes;

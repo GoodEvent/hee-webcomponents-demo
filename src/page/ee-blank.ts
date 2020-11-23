@@ -37,6 +37,7 @@ export class Blank extends HTMLElement {
     render(state: { users: [], loading: boolean }) {
         return `
         <button (click)="tosearch()">tosearch</button>
+        <ee-progress></ee-progress>
     `;
 
     }

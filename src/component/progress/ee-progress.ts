@@ -1,7 +1,8 @@
 import { store } from "@redux";
+import styles from './ee-progress.scss';
 
-export class Header extends HTMLElement {
-    static mtagName = "ee-header"
+export class Progress extends HTMLElement {
+    static mtagName = "ee-progress"
     constructor() {
         super();
         const shadow = this.attachShadow({ mode: 'open' });
@@ -10,14 +11,7 @@ export class Header extends HTMLElement {
 
     render(state) {
         return `
-        <div>
-        <ul>
-            <li>
-            <a>
-            notification
-            </a>
-            </li>
-        </ul>
+        <div class="ee-progress">
         </div>
     `;
     }
@@ -32,6 +26,9 @@ export class Header extends HTMLElement {
             if (this.html !== html) {
                 this.html = html;
                 this.shadowRoot.innerHTML = html;
+                const style = document.createElement('style');
+                style.textContent = styles;
+                this.shadowRoot.appendChild(style);
             }
             this.afterViewChecked();
         });
@@ -44,7 +41,7 @@ export class Header extends HTMLElement {
 
 
     attributeChangedCallback() {
-       
+
 
     }
 }
