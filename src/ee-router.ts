@@ -1,4 +1,4 @@
-import { store } from "./redux";
+import { store } from "@redux";
 import { Layout } from "./ee-layout";
 import { Login } from "./ee-login";
 import { Search } from "./page/ee-search";

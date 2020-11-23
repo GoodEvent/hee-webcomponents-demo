@@ -8,25 +8,8 @@ export class Header extends HTMLElement {
 
     }
 
-    get name() {
-        return this.getAttribute('name');
-    }
-
-    get age() {
-        return this.getAttribute('age');
-    }
-
     render(state) {
         return `
-        <style>
-            ul{
-                list-style-type:none;
-            }
-            li{
-                display:inline-block;
-                color: #ffffff;
-            }
-        </style>
         <div>
         <ul>
             <li>
@@ -44,10 +27,6 @@ export class Header extends HTMLElement {
     unsubscribe
     html
     connectedCallback() {
-        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
-        //     e.preventDefault();
-        // });
-        // bindEventsMethods(this);
         this.unsubscribe = store.subscribe(() => {
             let html = this.render(store.getState());
             if (this.html !== html) {
@@ -63,13 +42,6 @@ export class Header extends HTMLElement {
 
     static get observedAttributes() { return ['name', 'age']; }
 
-
-    changeName($event, name, age) {
-        this.setAttribute('name', name + 1);
-    }
-    changeAge($event, name, age) {
-        this.setAttribute('age', age + 1);
-    }
 
     attributeChangedCallback() {
        

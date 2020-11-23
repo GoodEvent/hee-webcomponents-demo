@@ -1,4 +1,4 @@
-import { store } from "./redux";
+import { store } from "@redux";
 
 const tp = (instance) => `
 <style>

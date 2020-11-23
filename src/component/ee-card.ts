@@ -1,4 +1,4 @@
-import { store } from "../redux";
+import { store } from "@redux";
 
 export class Card extends HTMLElement{
     static mtagName = 'ee-card';
