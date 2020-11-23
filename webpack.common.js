@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 module.exports = {
     entry: {
         app: './src/index.tsx',
@@ -27,7 +28,8 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+        extensions: ['.tsx', '.ts', '.js'],
+        plugins:[new TsconfigPathsPlugin({})]
     },
     plugins: [
         new webpack.DefinePlugin({ "process.env.PUBLIC_URL": JSON.stringify(".") }),

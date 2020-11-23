@@ -7,7 +7,6 @@
         "target": "ESNext",
         "allowJs": true,
         "jsx": "react",
-        "rootDir": "src",
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,

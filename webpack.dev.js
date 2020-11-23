@@ -12,10 +12,10 @@ module.exports = merge(common, {
     devServer: {
         contentBase: './src/static',
         historyApiFallback: true,
-        host:'0.0.0.0'
+        host: '0.0.0.0'
     },
-    module:{
-        rules:[
+    module: {
+        rules: [
             {
                 test: /\.css$/,
                 use: [
@@ -25,12 +25,31 @@ module.exports = merge(common, {
                 ]
             },
             {
-                test: /\.scss$/,
+                test: { and: [/^ee-*.scss$/, /\.scss$/] },
+                exclude: [/\.global.scss$/, /node_modules/],
                 use: [
                     "style-loader", // creates style nodes from JS strings
                     "css-loader", // translates CSS into CommonJS
                     "postcss-loader",
-                    "sass-loader" // compiles Sass to CSS, using Node Sass by default
+                    "sass-to-string",
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sassOptions: {
+                                outputStyle: "compressed",
+                            },
+                        },
+                    },
+                ]
+            },
+            {
+                test: /\.global.scss$/,
+                exclude: [/node_modules/],
+                use: [
+                    "style-loader", // creates style nodes from JS strings
+                    "css-loader", // translates CSS into CommonJS
+                    "postcss-loader",
+                    "sass-loader"
                 ]
             },
             {
@@ -44,5 +63,5 @@ module.exports = merge(common, {
             }
         ]
     },
-    
+
 });
