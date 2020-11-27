@@ -42,6 +42,7 @@ export class Sidebar extends HTMLElement {
         <li (click)="toblank()"><a> blank </a>
         </li>
         <li (click)="tosearch()"><a>search</a></li>
+        <li (click)="toprogress()"><a>progress</a></li>
     </ul>
 </div>`;
 
@@ -58,7 +59,9 @@ export class Sidebar extends HTMLElement {
     tosearch(){
         store.dispatch({type:'push',payload:'/layout/search'});
     }
-
+    toprogress(){
+        store.dispatch({type:'push',payload:'/layout/show-progress'});
+    }
     connectedCallback() {
         this.unsubscribe = store.subscribe(() => {
             let html = this.render(store.getState());

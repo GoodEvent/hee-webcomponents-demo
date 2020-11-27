@@ -12,6 +12,7 @@ export class Progress extends HTMLElement {
     render(state) {
         return `
         <div class="ee-progress">
+            <div class="ee-progress-bar" style="width:30%"></div>
         </div>
     `;
     }

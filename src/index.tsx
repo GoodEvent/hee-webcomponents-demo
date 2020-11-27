@@ -1,4 +1,4 @@
-// import './styles/style.global.scss';
+import './styles/style.global.scss';
 // import App from './App';
 // import React from 'react';
 // import ReactDOM from 'react-dom';
@@ -13,7 +13,6 @@
 // )
 
 import { bindEventsMethods } from 'hee-event-system';
-import { store } from './redux';
 import { Main } from './ee-main';
 import { Sidebar } from './ee-sidebar';
 import { Layout } from './ee-layout';
@@ -24,8 +23,9 @@ import { Router, RouterOut } from './ee-router';
 import { Search } from './page/ee-search';
 import { Blank } from './page/ee-blank';
 import { Progress } from './component/progress/ee-progress';
+import { ShowProgress } from './page/ee-show-progress';
 bindEventsMethods(['click']);
-const declarations = [Main, Sidebar, Layout, Header, Card, Login, RouterOut, Router, Search, Blank, Progress];
+const declarations = [Main, Sidebar, Layout, Header, Card, Login, RouterOut, Router, Search, Blank, Progress,ShowProgress];
 declarations.forEach(component => {
     customElements.define(component.mtagName, component);
 });

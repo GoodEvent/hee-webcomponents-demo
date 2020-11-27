@@ -25,13 +25,10 @@ module.exports = merge(common, {
                 ]
             },
             {
-                test:
-                    // /\.scss/,
-                    { and: [/\.scss$/, /ee-/] },
+                test: { and: [/\.scss$/, /ee-/] },
+                exclude: [/styles/],
                 use: [
-                    // "style-loader", // creates style nodes from JS strings
-                    // "css-loader", // translates CSS into CommonJS
-                    // "postcss-loader",
+
                     "sass-to-string",
                     "postcss-loader",
                     {
@@ -44,16 +41,16 @@ module.exports = merge(common, {
                     },
                 ]
             },
-            // {
-            //     test: /\.global.scss$/,
-            //     exclude: [/node_modules/],
-            //     use: [
-            //         "style-loader", // creates style nodes from JS strings
-            //         "css-loader", // translates CSS into CommonJS
-            //         "postcss-loader",
-            //         "sass-loader"
-            //     ]
-            // },
+            {
+                test: { and: [/\.scss$/, /global/] },
+                exclude: [/node_modules/],
+                use: [
+                    "style-loader", // creates style nodes from JS strings
+                    "css-loader", // translates CSS into CommonJS
+                    "postcss-loader",
+                    "sass-loader"
+                ]
+            },
             {
                 test: /\.less$/,
                 use: [

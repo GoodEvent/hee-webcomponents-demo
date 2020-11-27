@@ -3,13 +3,15 @@ import { Layout } from "./ee-layout";
 import { Login } from "./ee-login";
 import { Search } from "./page/ee-search";
 import { Blank } from "./page/ee-blank";
+import { ShowProgress } from "./page/ee-show-progress";
 
 const routerTable = [{
     url: '/login', component: Login.mtagName,
 }, {
     url: '/layout', component: Layout.mtagName, children: [
         { url: '/search', component: Search.mtagName },
-        { url: '/blank', component: Blank.mtagName }
+        { url: '/blank', component: Blank.mtagName },
+        { url: '/show-progress', component: ShowProgress.mtagName },
     ]
 }];
 export let router = (state, action) => {
