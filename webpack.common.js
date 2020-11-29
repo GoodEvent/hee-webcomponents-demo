@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 module.exports = {
     entry: {
         app: './src/index.tsx',
@@ -36,6 +37,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Development',
             template: './src/index.html'
+        }),
+        new ScriptExtHtmlWebpackPlugin({
+            module: 'app'
         })
     ],
 };

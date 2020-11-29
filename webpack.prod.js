@@ -16,21 +16,48 @@ module.exports = merge(common, {
     },
     stats: {
         // Examine all modules
-        maxModules: Infinity,
+        // maxModules: Infinity,
         // Display bailout reasons
-        optimizationBailout: true
+        // optimizationBailout: true
     },
     module: {
         rules: [
             {
-                test: /\.scss$/,
+                test: { and: [/\.scss$/, /ee-/] },
+                exclude: [/styles/],
+                use: [
+
+                    "sass-to-string",
+                    "postcss-loader",
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sassOptions: {
+                                outputStyle: "compressed",
+                            },
+                        },
+                    },
+                ]
+            },
+            {
+                test: { and: [/\.scss$/, /global/] },
+                exclude: [/node_modules/],
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader", // translates CSS into CommonJS
                     "postcss-loader",
-                    "sass-loader" // compiles Sass to CSS, using Node Sass by default
+                    "sass-loader"
                 ]
             },
+            // {
+            //     test: /\.scss$/,
+            //     use: [
+            //         MiniCssExtractPlugin.loader,
+            //         "css-loader", // translates CSS into CommonJS
+            //         "postcss-loader",
+            //         "sass-loader" // compiles Sass to CSS, using Node Sass by default
+            //     ]
+            // },
             {
                 test: /\.less$/,
                 use: [
@@ -52,7 +79,7 @@ module.exports = merge(common, {
     },
     optimization: {
         minimizer: [
-            new TerserPlugin({ sourceMap: true }),
+            new TerserPlugin(),
             new OptimizeCSSAssetsPlugin({ cssProcessorOptions: { map: { inline: false, annotation: true, } } })
         ],
         splitChunks: {
@@ -66,9 +93,11 @@ module.exports = merge(common, {
         }
     },
     plugins: [
-        new CopyWebpackPlugin([
-            { from: 'src/static' }
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'src/static' }
+            ]
+        }),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
