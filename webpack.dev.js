@@ -10,12 +10,15 @@ module.exports = merge(common, {
         publicPath: "/",
     },
     devServer: {
-        contentBase: './src/static',
+        static: './src/static',
         historyApiFallback: true,
-        host: '0.0.0.0'
+        host:'0.0.0.0'
     },
-    module: {
-        rules: [
+    // optimization:{
+    //     chunkIds:"named"
+    // },
+    module:{
+        rules:[
             {
                 test: /\.css$/,
                 use: [
@@ -57,10 +60,16 @@ module.exports = merge(common, {
                     "style-loader", // creates style nodes from JS strings
                     "css-loader", // translates CSS into CommonJS
                     "postcss-loader",
-                    "less-loader" // compiles Sass to CSS, using Node Sass by default
+                    {
+                        loader: "less-loader",
+                        options: {
+                            // modifyVars: antdVar,
+                            javascriptEnabled: true,
+                        },
+                    }
                 ]
             }
         ]
     },
-
+    
 });

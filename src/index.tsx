@@ -24,8 +24,14 @@ import { Search } from './page/ee-search';
 import { Blank } from './page/ee-blank';
 import { Progress } from './component/progress/ee-progress';
 import { ShowProgress } from './page/ee-show-progress';
+import createConfirgStore from './redux';
+
+let store = createConfirgStore();
+
+export { store };
+
 bindEventsMethods(['click']);
-const declarations = [Main, Sidebar, Layout, Header, Card, Login, RouterOut, Router, Search, Blank, Progress,ShowProgress];
+const declarations = [Main, Sidebar, Layout, Header, Card, Login, RouterOut, Router, Search, Blank, Progress, ShowProgress];
 declarations.forEach(component => {
     customElements.define(component.mtagName, component);
 });

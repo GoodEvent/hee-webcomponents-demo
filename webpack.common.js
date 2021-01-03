@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const path = require('path');
 module.exports = {
     entry: {
         app: './src/index.tsx',
@@ -22,15 +23,16 @@ module.exports = {
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
-                use: [
-                    'file-loader'
-                ]
+                type: 'asset/resource'
             }
         ]
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
-        plugins:[new TsconfigPathsPlugin({})]
+        alias: {
+            '@': path.resolve(__dirname, 'src')
+          }
+        // plugins:[new TsconfigPathsPlugin({})]
     },
     plugins: [
         new webpack.DefinePlugin({ "process.env.PUBLIC_URL": JSON.stringify(".") }),
@@ -38,8 +40,8 @@ module.exports = {
             title: 'Development',
             template: './src/index.html'
         }),
-        new ScriptExtHtmlWebpackPlugin({
-            module: 'app'
-        })
+        // new ScriptExtHtmlWebpackPlugin({
+        //     module: 'app'
+        // })
     ],
 };

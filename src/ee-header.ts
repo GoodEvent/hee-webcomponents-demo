@@ -1,4 +1,4 @@
-import { store } from "@redux";
+import { store } from "@/index";
 
 export class Header extends HTMLElement {
     static mtagName = "ee-header"

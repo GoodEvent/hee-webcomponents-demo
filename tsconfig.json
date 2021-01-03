@@ -7,16 +7,18 @@
         "target": "ESNext",
         "allowJs": true,
         "jsx": "react",
+        "baseUrl": "./",
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "typeRoots": [
             "node_modules/@types"
         ],
-        "baseUrl": "./",
         "paths": {
-            "@redux": ["src/redux"]
-          }
+            "@/*": [
+                "src/*"
+            ]
+        },
     },
     "exclude": [
         "node_modules",

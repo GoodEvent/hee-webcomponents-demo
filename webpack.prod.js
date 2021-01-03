@@ -5,7 +5,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin  = require("css-minimizer-webpack-plugin");
 module.exports = merge(common, {
     mode: 'production',
     // devtool: 'source-map',
@@ -14,12 +14,12 @@ module.exports = merge(common, {
         path: path.resolve(__dirname, './dist'),
         publicPath: "/",
     },
-    stats: {
-        // Examine all modules
-        // maxModules: Infinity,
-        // Display bailout reasons
-        // optimizationBailout: true
-    },
+    // stats: {
+    //     // Examine all modules
+    //     maxModules: Infinity,
+    //     // Display bailout reasons
+    //     optimizationBailout: true
+    // },
     module: {
         rules: [
             {
@@ -49,22 +49,19 @@ module.exports = merge(common, {
                     "sass-loader"
                 ]
             },
-            // {
-            //     test: /\.scss$/,
-            //     use: [
-            //         MiniCssExtractPlugin.loader,
-            //         "css-loader", // translates CSS into CommonJS
-            //         "postcss-loader",
-            //         "sass-loader" // compiles Sass to CSS, using Node Sass by default
-            //     ]
-            // },
             {
                 test: /\.less$/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader", // translates CSS into CommonJS
                     "postcss-loader",
-                    "less-loader" // compiles Sass to CSS, using Node Sass by default
+                    {
+                        loader: "less-loader",
+                        options: {
+                            // modifyVars: antdVar,
+                            javascriptEnabled: true,
+                        },
+                    }
                 ]
             },
             {
@@ -80,7 +77,7 @@ module.exports = merge(common, {
     optimization: {
         minimizer: [
             new TerserPlugin(),
-            new OptimizeCSSAssetsPlugin({ cssProcessorOptions: { map: { inline: false, annotation: true, } } })
+            new CssMinimizerPlugin()
         ],
         splitChunks: {
             cacheGroups: {

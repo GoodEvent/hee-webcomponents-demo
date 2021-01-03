@@ -1,5 +1,3 @@
-import { store } from "@redux";
-
 const tp = (instance) => `
 <style>
     div.layout{

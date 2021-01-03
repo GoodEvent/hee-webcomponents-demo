@@ -1,4 +1,5 @@
-import { getUserThunk, store } from "./redux";
+import { store } from ".";
+import { getUserThunk } from "./redux";
 
 
 export class Main extends HTMLElement {

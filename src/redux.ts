@@ -61,11 +61,11 @@ const randomString = () =>
     Math.random().toString(36).substring(7).split('').join('.')
 
 const ActionTypes = {
-    INIT: `@@redux/INIT${/* #__PURE__ */ randomString()}`,
-    REPLACE: `@@redux/REPLACE${/* #__PURE__ */ randomString()}`,
-    PROBE_UNKNOWN_ACTION: () => `@@redux/PROBE_UNKNOWN_ACTION${randomString()}`
+    INIT: `@@/redux/INIT${/* #__PURE__ */ randomString()}`,
+    REPLACE: `@@/redux/REPLACE${/* #__PURE__ */ randomString()}`,
+    PROBE_UNKNOWN_ACTION: () => `@@/redux/PROBE_UNKNOWN_ACTION${randomString()}`
 }
-export function createStore(reducer, initState, enhaner) {
+function createStore(reducer, initState, enhaner) {
     let listeners: Function[] = [];
     let state = initState;
     let currentReducer = reducer;
@@ -146,15 +146,20 @@ const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer
 }
 
 
-let store = createStore(rootReducer, {},
-    composeWithDevTools(
-    applyMiddleware([thunkMiddleware,logMiddleware,routerMiddleware])
-    )
-);
+export default function createConfirgStore(){
+    let store = createStore(rootReducer, {},
+        // composeWithDevTools(
+        applyMiddleware([thunkMiddleware,logMiddleware,routerMiddleware])
+        // )
+    );
+    return store;
+}
+
+
 
 // let store = applyMiddleware([logMiddleware,thunkMiddleware])(createStore)(rootReducer, {});
 // const store = new Store({}, rootReducer, [thunk]);
 // const eh = (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__();
 
 // const store = eh(createStore)(rootReducer, {});
-export { store };
+// export { store };
