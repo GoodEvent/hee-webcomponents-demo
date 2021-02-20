@@ -43,6 +43,7 @@ export class Sidebar extends HTMLElement {
         </li>
         <li (click)="tosearch()"><a>search</a></li>
         <li (click)="toprogress()"><a>progress</a></li>
+        <li (click)="totree()"><a>tree</a></li>
     </ul>
 </div>`;
 
@@ -61,6 +62,9 @@ export class Sidebar extends HTMLElement {
     }
     toprogress(){
         store.dispatch({type:'push',payload:'/layout/show-progress'});
+    }
+    totree(){
+        store.dispatch({type:'push',payload:'/layout/tree'});
     }
     connectedCallback() {
         this.unsubscribe = store.subscribe(() => {
