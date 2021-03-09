@@ -1,3 +1,4 @@
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { router, routerMiddleware, routerLoading } from "./ee-router";
 export const users = (state = [], action) => {
@@ -43,62 +44,62 @@ export const rootReducer = combineReducers({ users, loading, router, routerLoadi
 //     }
 // }
 
-export function combineReducers(obj) {
-    const keys = Object.keys(obj);
-    return (state, action) => {
-        return keys.reduce((pre, current) => {
-            let value = obj[current](state[current], action);
-            pre[current] = value;
-            return pre;
-        }, {});
-    };
-}
+// export function combineReducers(obj) {
+//     const keys = Object.keys(obj);
+//     return (state, action) => {
+//         return keys.reduce((pre, current) => {
+//             let value = obj[current](state[current], action);
+//             pre[current] = value;
+//             return pre;
+//         }, {});
+//     };
+// }
 
 
 
 
-const randomString = () =>
-    Math.random().toString(36).substring(7).split('').join('.')
+// const randomString = () =>
+//     Math.random().toString(36).substring(7).split('').join('.')
 
-const ActionTypes = {
-    INIT: `@@/redux/INIT${/* #__PURE__ */ randomString()}`,
-    REPLACE: `@@/redux/REPLACE${/* #__PURE__ */ randomString()}`,
-    PROBE_UNKNOWN_ACTION: () => `@@/redux/PROBE_UNKNOWN_ACTION${randomString()}`
-}
-function createStore(reducer, initState, enhaner) {
-    let listeners: Function[] = [];
-    let state = initState;
-    let currentReducer = reducer;
-    if (enhaner instanceof Function) {
-        return enhaner(createStore)(reducer, initState);
-    }
-    let dispatch = (action) => {
-        state = currentReducer(state, action);
-        listeners.forEach(listener => listener());
-        return action;
-    }
+// const ActionTypes = {
+//     INIT: `@@/redux/INIT${/* #__PURE__ */ randomString()}`,
+//     REPLACE: `@@/redux/REPLACE${/* #__PURE__ */ randomString()}`,
+//     PROBE_UNKNOWN_ACTION: () => `@@/redux/PROBE_UNKNOWN_ACTION${randomString()}`
+// }
+// function createStore(reducer, initState, enhaner) {
+//     let listeners: Function[] = [];
+//     let state = initState;
+//     let currentReducer = reducer;
+//     if (enhaner instanceof Function) {
+//         return enhaner(createStore)(reducer, initState);
+//     }
+//     let dispatch = (action) => {
+//         state = currentReducer(state, action);
+//         listeners.forEach(listener => listener());
+//         return action;
+//     }
 
-    let subscribe = (listener: Function) => {
-        listeners.push(listener);
-        listener(getState());
-        return () => {
-            listeners = listeners.filter(item => {
-                return item != listener;
-            });
-        };
-    }
+//     let subscribe = (listener: Function) => {
+//         listeners.push(listener);
+//         listener(getState());
+//         return () => {
+//             listeners = listeners.filter(item => {
+//                 return item != listener;
+//             });
+//         };
+//     }
 
-    let getState = () => {
-        return state;
-    }
-    dispatch({ type: ActionTypes.INIT });
-    const store = {
-        getState,
-        dispatch,
-        subscribe
-    }
-    return store;
-}
+//     let getState = () => {
+//         return state;
+//     }
+//     dispatch({ type: ActionTypes.INIT });
+//     const store = {
+//         getState,
+//         dispatch,
+//         subscribe
+//     }
+//     return store;
+// }
 
 export const logMiddleware = store => next => action => {
     console.log('dispatching', action);
@@ -134,23 +135,26 @@ export const thunkMiddleware = store => next => action => {
 
 
 
-const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer, iniState) => {
-    const store = createStore(rootReducer, iniState);
-    middlewares = middlewares.slice();
-    middlewares.reverse();
-    let dispatch = store.dispatch;
-    middlewares.forEach(middleware => {
-        dispatch = middleware(store)(dispatch);
-    });
-    return Object.assign({}, store, { dispatch });
-}
+// const applyMiddleware = (middlewares: Function[]) => createStore => (rootReducer, iniState) => {
+//     const store = createStore(rootReducer, iniState);
+//     middlewares = middlewares.slice();
+//     middlewares.reverse();
+//     let dispatch = store.dispatch;
+//     middlewares.forEach(middleware => {
+//         dispatch = middleware(store)(dispatch);
+//     });
+//     return Object.assign({}, store, { dispatch });
+// }
 
 
 export default function createConfirgStore(){
-    let store = createStore(rootReducer, {},
-        // composeWithDevTools(
-        applyMiddleware([thunkMiddleware,logMiddleware,routerMiddleware])
-        // )
+    let store = createStore(rootReducer,
+        composeWithDevTools(
+        applyMiddleware(
+            thunkMiddleware,
+            logMiddleware,
+            routerMiddleware)
+        )
     );
     return store;
 }

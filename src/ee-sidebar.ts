@@ -7,6 +7,7 @@ export class Sidebar extends HTMLElement {
     constructor() {
         // 必须首先调用 super 方法
         super();
+        console.log('sidabar')
         const shadow = this.attachShadow({ mode: 'open' });
     }
 
@@ -75,13 +76,19 @@ export class Sidebar extends HTMLElement {
             }
             this.afterViewChecked();
         });
+        let html = this.render(store.getState());
+            if (this.html !== html) {
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
     }
     disconnectedCallback() {
         this.unsubscribe();
     }
 
     u(){
-        store.dispatch({type:'add'});
+        // store.dispatch({type:'add'});
     }
 
     s(){

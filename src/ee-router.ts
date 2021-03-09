@@ -4,7 +4,7 @@ import { Login } from "./ee-login";
 import { Search } from "./page/ee-search";
 import { Blank } from "./page/ee-blank";
 import { ShowProgress } from "./page/ee-show-progress";
-import { Tree } from "./page/ee-tree";
+// import { Tree } from "./page/ee-tree";
 
 const routerTable = [{
     url: '/login', component: Login.mtagName,
@@ -13,10 +13,10 @@ const routerTable = [{
         { url: '/search', component: Search.mtagName },
         { url: '/blank', component: Blank.mtagName },
         { url: '/show-progress', component: ShowProgress.mtagName },
-        { url: '/tree', component: Tree.mtagName },
+        // { url: '/tree', component: Tree.mtagName },
     ]
 }];
-export let router = (state, action) => {
+export let router = (state = null, action) => {
     switch (action.type) {
         case 'push': {
             let nowRouterTable = routerTable;
@@ -125,6 +125,7 @@ export class Router extends HTMLElement {
     route = [];
 
     connectedCallback() {
+        console.log('foo')
         store.subscribe(() => {
             let state = store.getState();
             let routerLoading = state.routerLoading;
@@ -138,7 +139,7 @@ export class Router extends HTMLElement {
 
         });
     }
-
+    contentEditable
     render() {
         return `
         <ee-route></ee-route>
@@ -192,19 +193,7 @@ export class RouterOut extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        // console.log('change');
-        // var shadow = this.shadowRoot;
-        // shadow.innerHTML = this.render(store.getState().router)
-        // shadow.innerHTML = this.render(store.getState().router);
-
     }
-
-    // changeName($event, name, age) {
-    //     this.setAttribute('name', name + 1);
-    // }
-    // changeAge($event, name, age) {
-    //     this.setAttribute('age', age + 1);
-    // }
 
 
 }

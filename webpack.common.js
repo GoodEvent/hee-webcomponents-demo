@@ -1,7 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const path = require('path');
 module.exports = {
     entry: {
@@ -15,7 +13,7 @@ module.exports = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            transpileOnly: true,
+                            // transpileOnly: true,
                             experimentalWatchApi: true,
                         },
                     },],

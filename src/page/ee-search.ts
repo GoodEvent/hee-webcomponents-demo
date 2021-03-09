@@ -75,7 +75,7 @@ export class Search extends HTMLElement {
     search() {
         store.dispatch({ type: 'fetching' });
         setTimeout(() => {
-            store.dispatch(getUserThunk());
+            store.dispatch(getUserThunk() as any);
         }, 1000)
     }
 

@@ -42,8 +42,8 @@ export class Card extends HTMLElement{
     }
 
     connectedCallback() {
-        this.unsubscribe = store.subscribe(state => {
-            let html = this.render(state);
+        this.unsubscribe = store.subscribe(() => {
+            let html = this.render(store.getState());
             if (this.html !== html) {
                 this.html = html;
                 this.shadowRoot.innerHTML = html;

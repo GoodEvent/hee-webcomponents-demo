@@ -56,6 +56,12 @@ export class Header extends HTMLElement {
             }
             this.afterViewChecked();
         });
+        let html = this.render(store.getState());
+            if (this.html !== html) {
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
     }
     disconnectedCallback() {
         this.unsubscribe();

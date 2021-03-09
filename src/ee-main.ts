@@ -55,6 +55,12 @@ export class Main extends HTMLElement {
             }
             this.afterViewChecked();
         });
+        let html = this.render(store.getState());
+            if (this.html !== html) {
+                this.html = html;
+                this.shadowRoot.innerHTML = html;
+            }
+            this.afterViewChecked();
     }
     disconnectedCallback() {
         console.log('remove')
@@ -63,7 +69,8 @@ export class Main extends HTMLElement {
     search() {
         store.dispatch({ type: 'fetching' });
         setTimeout(() => {
-            store.dispatch(getUserThunk());
+            const a:any = getUserThunk();
+            store.dispatch(a);
         }, 1000)
     }
 
