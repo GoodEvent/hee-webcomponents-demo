@@ -49,6 +49,8 @@
     "d3": "^6.5.0",
     "hee-animation": "^1.0.0-apla",
     "hee-event-system": "^1.0.1-alpha",
+    "inversify": "^2.0.0-rc.14",
+    "lit": "^2.0.2",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.9",
     "redux-observable": "^1.2.0",

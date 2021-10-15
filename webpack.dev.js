@@ -12,7 +12,7 @@ module.exports = merge(common, {
     devServer: {
         static: './src/static',
         historyApiFallback: true,
-        host:'0.0.0.0',
+        // host:'0.0.0.0',
         port:'8081'
     },
     // optimization:{

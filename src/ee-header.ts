@@ -1,32 +1,34 @@
-import { store } from "@/index";
+// import { store } from "@/index";
+import {  css, html, LitElement } from "lit";
+import {customElement, property} from 'lit/decorators.js';
 
-export class Header extends HTMLElement {
-    static mtagName = "ee-header"
-    constructor() {
-        super();
-        const shadow = this.attachShadow({ mode: 'open' });
+@customElement('ee-header')
+export class Header extends LitElement  {
+    // static mtagName = "ee-header"
+    // constructor() {
+    //     super();
+    //     const shadow = this.attachShadow({ mode: 'open' });
 
+    // }
+    static styles = css`
+    ul{
+        list-style-type:none;
     }
-
-    get name() {
-        return this.getAttribute('name');
+    li{
+        display:inline-block;
+        color: #ffffff;
     }
+    `
+    // get name() {
+    //     return this.getAttribute('name');
+    // }
 
-    get age() {
-        return this.getAttribute('age');
-    }
+    // get age() {
+    //     return this.getAttribute('age');
+    // }
 
-    render(state) {
-        return `
-        <style>
-            ul{
-                list-style-type:none;
-            }
-            li{
-                display:inline-block;
-                color: #ffffff;
-            }
-        </style>
+    render() {
+        return html`
         <div>
         <ul>
             <li>
@@ -39,46 +41,46 @@ export class Header extends HTMLElement {
     `;
     }
 
-    afterViewChecked() {
-    }
-    unsubscribe
-    html
-    connectedCallback() {
-        // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
-        //     e.preventDefault();
-        // });
-        // bindEventsMethods(this);
-        this.unsubscribe = store.subscribe(() => {
-            let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-        });
-        let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-    }
-    disconnectedCallback() {
-        this.unsubscribe();
-    }
+    // afterViewChecked() {
+    // }
+    // unsubscribe
+    // html
+    // connectedCallback() {
+    //     // this.shadowRoot.querySelector('input').addEventListener('click',(e)=>{
+    //     //     e.preventDefault();
+    //     // });
+    //     // bindEventsMethods(this);
+    //     // this.unsubscribe = store.subscribe(() => {
+    //     //     let html = this.render(store.getState());
+    //     //     if (this.html !== html) {
+    //     //         this.html = html;
+    //     //         this.shadowRoot.innerHTML = html;
+    //     //     }
+    //     //     this.afterViewChecked();
+    //     // });
+    //     // let html = this.render(store.getState());
+    //     //     if (this.html !== html) {
+    //     //         this.html = html;
+    //     //         this.shadowRoot.innerHTML = html;
+    //     //     }
+    //     //     this.afterViewChecked();
+    // }
+    // disconnectedCallback() {
+    //     // this.unsubscribe();
+    // }
 
-    static get observedAttributes() { return ['name', 'age']; }
+    // static get observedAttributes() { return ['name', 'age']; }
 
 
-    changeName($event, name, age) {
-        this.setAttribute('name', name + 1);
-    }
-    changeAge($event, name, age) {
-        this.setAttribute('age', age + 1);
-    }
+    // changeName($event, name, age) {
+    //     this.setAttribute('name', name + 1);
+    // }
+    // changeAge($event, name, age) {
+    //     this.setAttribute('age', age + 1);
+    // }
 
-    attributeChangedCallback() {
+    // attributeChangedCallback() {
        
 
-    }
+    // }
 }
