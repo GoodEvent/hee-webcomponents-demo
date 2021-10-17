@@ -1,92 +1,86 @@
-import { store } from "..";
-import { getUserThunk } from "../redux";
+import { store } from '..';
+import { getUserThunk } from '../redux';
+import { css, html, LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+@customElement('ee-blank')
+export class Blank extends LitElement {
+  // static mtagName = "ee-blank"
+  unsubscribe;
+  html: string;
+  // constructor() {
+  //     // 必须首先调用 super 方法
+  //     super();
+  //     const shadow = this.attachShadow({ mode: 'open' });
+  //     this.unsubscribe = store.subscribe(() => {
+  //         let html = this.render(store.getState());
+  //         if (this.html !== html) {
+  //             this.html = html;
+  //             this.shadowRoot.innerHTML = html;
+  //         }
+  //         this.afterViewChecked();
+  //     });
+  // }
 
+  get name() {
+    return this.getAttribute('name');
+  }
 
-export class Blank extends HTMLElement {
-    static mtagName = "ee-blank"
-    unsubscribe;
-    html: string;
-    constructor() {
-        // 必须首先调用 super 方法
-        super();
-        const shadow = this.attachShadow({ mode: 'open' });
-        this.unsubscribe = store.subscribe(() => {
-            let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-        });
-    }
+  get age() {
+    return this.getAttribute('age');
+  }
 
-    get name() {
-        return this.getAttribute('name');
-    }
+  add() {
+    store.dispatch({ type: 'add' });
+  }
+  add1() {
+    store.dispatch({ type: 'add1' });
+  }
 
-    get age() {
-        return this.getAttribute('age');
-    }
-
-    add() {
-        store.dispatch({ type: 'add' });
-    }
-    add1() {
-        store.dispatch({ type: 'add1' });
-    }
-
-    render(state: { users: [], loading: boolean }) {
-        return `
-        <button (click)="tosearch()">tosearch</button>
-        <ee-progress></ee-progress>
+  render() {
+    return html`
+      <button (click)="tosearch()">tosearch</button>
+      <ee-progress></ee-progress>
     `;
+  }
 
-    }
+  tosearch() {
+    store.dispatch({ type: 'push', payload: '/layout/search' });
+  }
 
-    tosearch(){
-        store.dispatch({type:'push',payload:'/layout/search'})
-    }
+  afterViewChecked() {}
 
-    afterViewChecked() {
-    }
+  //   connectedCallback() {
+  //     this.search();
+  //   }
+  //   disconnectedCallback() {
+  //     console.log('remove');
+  //     this.unsubscribe();
+  //   }
+  search() {
+    store.dispatch({ type: 'fetching' });
+    setTimeout(() => {
+      store.dispatch(getUserThunk() as any);
+    }, 1000);
+  }
 
-    connectedCallback() {
-        this.search();
-    }
-    disconnectedCallback() {
-        console.log('remove')
-        this.unsubscribe();
-    }
-    search() {
-        store.dispatch({ type: 'fetching' });
-        setTimeout(() => {
-            store.dispatch(getUserThunk() as any);
-        }, 1000)
-    }
+  mfoo(event: Event) {
+    event.stopPropagation();
+  }
 
+  mfather() {}
 
-    mfoo(event: Event) {
-        event.stopPropagation();
-    }
+  checkbox(e: Event) {
+    e.preventDefault();
+  }
 
-    mfather() {
-    }
+  // static get observedAttributes() { return Object.keys(store.state); }
 
-    checkbox(e: Event) {
-        e.preventDefault();
-    }
+  changeName($event, name, age) {
+    this.setAttribute('name', name + 1);
+  }
+  changeAge($event, name, age) {
+    this.setAttribute('age', age + 1);
+  }
 
-    // static get observedAttributes() { return Object.keys(store.state); }
-
-
-    changeName($event, name, age) {
-        this.setAttribute('name', name + 1);
-    }
-    changeAge($event, name, age) {
-        this.setAttribute('age', age + 1);
-    }
-
-    attributeChangedCallback() {
-
-    }
+  //   attributeChangedCallback() {}
 }

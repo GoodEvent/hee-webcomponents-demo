@@ -1,8 +1,8 @@
 // import { store } from "@/index";
-import { css, html, LitElement } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { css, html, LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
-@customElement("ee-header")
+@customElement('ee-header')
 export class Header extends LitElement {
   // static mtagName = "ee-header"
   // constructor() {
@@ -45,8 +45,8 @@ export class Header extends LitElement {
     `;
   }
 
-  change(){
-      this.username += 1;
+  change() {
+    this.username += 1;
   }
 
   // afterViewChecked() {

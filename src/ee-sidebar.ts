@@ -1,106 +1,103 @@
-import { store } from "@/index";
+import { store } from '@/index';
+import { css, html, LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
+@customElement('ee-sidebar')
+export class Sidebar extends LitElement {
+  // static mtagName = "ee-sidebar"
+  // constructor() {
+  //     // 必须首先调用 super 方法
+  //     super();
+  //     console.log('sidabar')
+  //     const shadow = this.attachShadow({ mode: 'open' });
+  // }
 
+  // get name() {
+  //     return this.getAttribute('name');
+  // }
 
-export class Sidebar extends HTMLElement {
-    static mtagName = "ee-sidebar"
-    constructor() {
-        // 必须首先调用 super 方法
-        super();
-        console.log('sidabar')
-        const shadow = this.attachShadow({ mode: 'open' });
-    }
+  // get age() {
+  //     return this.getAttribute('age');
+  // }
 
-    get name() {
-        return this.getAttribute('name');
-    }
+  render() {
+    return html`<style>
+        ul {
+          list-style-type: none;
+          margin: 0;
+        }
 
-    get age() {
-        return this.getAttribute('age');
-    }
+        li {
+          height: 40px;
+          line-height: 40px;
+          margin: 0;
+          color: #ffffff;
+        }
+        .logo {
+          height: 67px;
+        }
+      </style>
+      <div>
+        <div class="logo">logo</div>
+        <ul>
+          <li (click)="toblank()"><a> blank </a></li>
+          <li (click)="tosearch()"><a>search</a></li>
+          <li (click)="toprogress()"><a>progress</a></li>
+          <li (click)="totree()"><a>tree</a></li>
+        </ul>
+      </div>`;
+  }
 
-    render(state) {
-       return `<style>
-    ul {
-        list-style-type: none;
-        margin: 0;
-    }
+  afterViewChecked() {}
+  unsubscribe;
+  html;
 
-    li {
-        height:40px;
-        line-height: 40px;
-        margin: 0;
-        color: #ffffff;
-    }
-    .logo{
-        height:67px;
-    }
+  toblank() {
+    store.dispatch({ type: 'push', payload: '/layout/blank' });
+  }
+  tosearch() {
+    store.dispatch({ type: 'push', payload: '/layout/search' });
+  }
+  toprogress() {
+    store.dispatch({ type: 'push', payload: '/layout/show-progress' });
+  }
+  totree() {
+    store.dispatch({ type: 'push', payload: '/layout/tree' });
+  }
+  //   connectedCallback() {
+  //     this.unsubscribe = store.subscribe(() => {
+  //       let html = this.render(store.getState());
+  //       if (this.html !== html) {
+  //         this.html = html;
+  //         this.shadowRoot.innerHTML = html;
+  //       }
+  //       this.afterViewChecked();
+  //     });
+  //     let html = this.render(store.getState());
+  //     if (this.html !== html) {
+  //       this.html = html;
+  //       this.shadowRoot.innerHTML = html;
+  //     }
+  //     this.afterViewChecked();
+  //   }
+  //   disconnectedCallback() {
+  //     this.unsubscribe();
+  //   }
 
-</style>
-<div>
-    <div class="logo">logo</div>
-    <ul>
-        <li (click)="toblank()"><a> blank </a>
-        </li>
-        <li (click)="tosearch()"><a>search</a></li>
-        <li (click)="toprogress()"><a>progress</a></li>
-        <li (click)="totree()"><a>tree</a></li>
-    </ul>
-</div>`;
+  u() {
+    // store.dispatch({type:'add'});
+  }
 
-    }
+  s() {}
 
-    afterViewChecked() {
-    }
-    unsubscribe
-    html
+  static get observedAttributes() {
+    return ['name', 'age'];
+  }
 
-    toblank(){
-        store.dispatch({type:'push',payload:'/layout/blank'});
-    }
-    tosearch(){
-        store.dispatch({type:'push',payload:'/layout/search'});
-    }
-    toprogress(){
-        store.dispatch({type:'push',payload:'/layout/show-progress'});
-    }
-    totree(){
-        store.dispatch({type:'push',payload:'/layout/tree'});
-    }
-    connectedCallback() {
-        this.unsubscribe = store.subscribe(() => {
-            let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-        });
-        let html = this.render(store.getState());
-            if (this.html !== html) {
-                this.html = html;
-                this.shadowRoot.innerHTML = html;
-            }
-            this.afterViewChecked();
-    }
-    disconnectedCallback() {
-        this.unsubscribe();
-    }
-
-    u(){
-        // store.dispatch({type:'add'});
-    }
-
-    s(){
-    }
-
-    static get observedAttributes() { return ['name', 'age']; }
-
-
-    changeName($event, name, age) {
-        this.setAttribute('name', name + 1);
-    }
-    changeAge($event, name, age) {
-        this.setAttribute('age', age + 1);
-    }
+  changeName($event, name, age) {
+    this.setAttribute('name', name + 1);
+  }
+  changeAge($event, name, age) {
+    this.setAttribute('age', age + 1);
+  }
 }
